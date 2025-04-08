@@ -16,7 +16,7 @@ export default function Payback () {
         <div className={style.resum_container}>          
           <ul>
             <li>Sistema necessário:</li>
-            <li>Custo estimádo:</li>
+            <li>Custo estimado:</li>
             <li>Payback:</li>
             <li>Lucro acumulado em _ anos:</li>
             <li>Lucro líquido:</li>

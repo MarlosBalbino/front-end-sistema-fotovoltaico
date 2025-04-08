@@ -24,7 +24,7 @@ export default function HomePage() {
     <div className={style.main_container}>
 
       <section className={style.intro}>
-        {/* <RandomWalkMode /> */}
+        <RandomWalkMode />
         <h1 className={style.title}>Sistema Fotovoltaico</h1>
         <sub className={style.sub}>Dimensionamento e Simulação</sub>        
         
