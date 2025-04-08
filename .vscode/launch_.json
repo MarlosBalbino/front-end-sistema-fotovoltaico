@@ -1,0 +1,25 @@
+{
+   
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Iniciar o Programa",
+           
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            
+            "program": "${file}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "entrypoint_file",
+            "type":"promptString",
+            "description": "Program Args",
+            "default": "scripts/main"
+        }
+    ]
+}

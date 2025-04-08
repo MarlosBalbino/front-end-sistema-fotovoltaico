@@ -1,0 +1,40 @@
+.main_container {
+  /* background-color: aqua; */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1rem; /* opcional: espaçamento entre locations e data */
+  width: 100%;
+  min-height: 200px;
+  /* gap: 2rem; */
+  padding: 20px;
+  /* border-radius: 8px; */
+}
+
+/* Ajusta .locations e .data para crescerem de forma proporcional */
+.calc_container {
+  /* background-color: blueviolet; */
+  padding: 16px;
+  /* margin-left: 2rem; */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.resum_container {
+  padding: 16px 16px 16px 32px;
+  /* margin-left: 2rem; */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.label {
+  font-weight: bold;
+}

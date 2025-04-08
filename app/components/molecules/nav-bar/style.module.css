@@ -1,0 +1,41 @@
+/* .p {
+  margin: 1rem;
+  text-decoration: none;
+} */
+
+.nav_buttons {
+  /* background-color: blueviolet; */
+  width: 100%;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* padding: 1rem */
+}
+
+.main_buttons {
+  /* width: 40%; */
+  height: 100%;
+  margin-left: 2rem;
+  /* gap: 1rem; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* background-color: chartreuse; */
+}
+
+.secnd_buttons {
+  margin-right: 2rem;
+  display: flex;
+  flex-direction: row;
+  /* gap: 1rem; */
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: aqua;
+  /* height: 100%; */
+}

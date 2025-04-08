@@ -1,0 +1,15 @@
+.input {
+    color: black;
+    outline: none;
+    border-color: blueviolet;
+    margin-left: 2rem;
+  }
+  
+  .input:hover {
+    border-color: brown;
+  }
+  
+  .input:focus {
+    border-color: blue;
+  }
+
