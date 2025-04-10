@@ -1,10 +1,11 @@
 'use client'
 
 import { Plot } from "@organisms";
-import { RandomWalkMode } from "@/app/components/molecules";
+import { RandomWalkMode } from "@molecules";
 
 
 import style from './style.module.css'
+import { Perfil, SimpleButton } from "@atoms";
 
 const DEFAULT_COLORS = ['#8884d8', '#82ca9d', '#ff7300', '#ff0000', '#00ff00', '#0000ff', '#1c9963'];
 export default function HomePage() {
@@ -26,24 +27,50 @@ export default function HomePage() {
       <section className={style.intro}>
         <RandomWalkMode />
         <h1 className={style.title}>Sistema Fotovoltaico</h1>
-        <sub className={style.sub}>Dimensionamento e Simulação</sub>        
-        
+        <sub className={style.sub}>Dimensionamento e Simulação</sub>    
       </section>
 
-      <section className={style.section_2}>
-        <h1 className={style.h1}>Dimensione Seu Sistema</h1>
+      <section className={style.intro}>
+        <h1 className={style.title}>ECOM117</h1>
+        <sub className={style.sub}>Tópicos em Energia Solar Fotovoltaica</sub> 
+      </section>
 
+      <section className={style.section}>
+        <h2 className={style.h2}> Energia Solar e Dimensionamento de Paineis </h2>
         <div className={style.alguma_coisa}>
-          <p>Alguma coisa</p>
-
+          <p>** Conteúdo introdutório sobre Energia solar fotovoltaica e dimensionamento de paineis fotovoltaicos **</p>          
         </div>
-
+        <div className={style.button_div}>
+          <SimpleButton link={'/pages/page-1'} label={'Ir Para Dimensionamento'}/>
+        </div>
         
-
       </section>
 
-      <section className={style.section_3}>
-        <p style={{fontSize: '20pt'}}> Irradiância No Plano Horizontal </p>
+      <section className={style.section}>
+        <h2 className={style.h2}> Funcionamento e Curva Característica do Painel Fotovoltaico </h2>
+        <div className={style.alguma_coisa}>
+          <p>** Conteúdo introdutório sobre o funcionamento técnico de um painel fotovoltaico e sua curva Característica **</p>          
+        </div>
+        <div className={style.button_div}>
+          <SimpleButton link={'/pages/page-3'} label={'Ir Para Curva Característica'}/>
+        </div>
+      </section>
+
+      <section className={style.section}>
+        <h2 className={style.h2}> Simulação de um sistema fotovoltaico </h2>
+        <div className={style.alguma_coisa}>
+          <p>** Conteúdo introdutório sobre Energia solar fotovoltaica e dimensionamento de paineis fotovoltaicos **</p>          
+        </div>
+        <div className={style.button_div}>
+          <SimpleButton link={'/pages/page-2'} label={'Ir Para Simulação'}/>
+        </div>
+      </section>
+
+      <section className={style.section}>
+        <h2 className={style.h2}> Localização e Irradiância </h2>
+        <div className={style.alguma_coisa}>
+          <p>** Conteúdo sobre localização geografica, irradiância no plano horizontal e inclinado **</p>          
+        </div>
 
         <div className={style.plot_container}>        
           <Plot fileName="11_03_19_novo.dat" />        
@@ -53,13 +80,26 @@ export default function HomePage() {
             <select className={style.select} name="ano" ><option value="2019">2019</option></select>
           </div>        
         </div>
-
       </section>
-      
 
+      <section className={style.section}>
+        <h2 className={style.h2}> Colaboradores </h2>
 
-      
+        <h3>Orientador</h3>
+        <div className={style.grid_container}>
+          <Perfil name={'Maurício Beltrão Rossiter'}/>
+        </div>
 
+        <h3>Discentes</h3>        
+        <div className={style.grid_container}>
+          <Perfil name={'Antônio Carlos'}/>
+          <Perfil name={'Arturo Jiménez Loaisa'}/>
+          <Perfil name={'José Gomes'}/>
+          <Perfil name={'José Renilson'}/>
+          <Perfil name={'Marlos Nunes'}/>
+          <Perfil name={'Milena Nunes'}/>
+        </div>
+      </section>
     </div>       
     
   );

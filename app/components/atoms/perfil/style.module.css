@@ -1,0 +1,33 @@
+
+
+.main_container {
+  /* background-color: aqua; */
+  /* width: 500px; */
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.label {
+  font-size: 14pt;
+
+}
+
+.perfil {
+  border: 1px solid #ccc;
+  border-radius: 100%;
+  /* width: auto; */
+  height: 100%;
+  aspect-ratio: 1;
+  /* padding: 0.3em; */
+  overflow: hidden;
+}
+
+.img {
+  z-index: -1;
+  height: 100%;
+
+}

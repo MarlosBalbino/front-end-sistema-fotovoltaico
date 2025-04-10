@@ -7,10 +7,10 @@ interface LinkProps {
   link: string
 }
 
-const FooterLinkItem: React.FC<LinkProps> = ({ label, link }) => {
+const SimpleLinkItem: React.FC<LinkProps> = ({ label, link }) => {
   return (
     <Link href={link} className={style.linkItem}>{label}</Link>
   )
 }
 
-export default FooterLinkItem
+export default SimpleLinkItem

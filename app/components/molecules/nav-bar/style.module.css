@@ -1,7 +1,31 @@
-/* .p {
-  margin: 1rem;
-  text-decoration: none;
-} */
+.main_container {
+  background-color: var(--color-background);
+  /* background-color: aqua; */
+  position: fixed;
+  height: 80px;
+  width: 100%;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sub_container {
+  background-color: var(--color-background);
+  /* background-color: blueviolet; */
+  width: 100%;
+  z-index: 50;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.bottom_line{
+  width: 100%;
+  height: 5px;
+  background-color: var(--color-1);
+  /* background-color: blue; */
+}
 
 .nav_buttons {
   /* background-color: blueviolet; */

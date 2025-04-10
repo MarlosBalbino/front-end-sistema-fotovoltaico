@@ -1,6 +1,6 @@
-'use client'
-import React, { useRef, useEffect, useState } from "react";
-import styles from "./style.module.css";
+'use client';
+import React, { useRef, useEffect, useState } from 'react';
+import styles from './style.module.css';
 
 interface Point {
   x: number;
@@ -11,137 +11,198 @@ interface Point {
   opacity: number;
 }
 
+// Parâmetros ajustáveis
+const numPoints = 150;
+const maxConnectionDistance = 200;
+const maxMouseDistance = 300;
+const maxConnectionsPerPoint = 10;
+const maxConnectionsToMouse = 10;
+const minOpacity = 0.2
+const maxOpacity = 0.6
+const maxRadius = 5
+const minRadius = 1
+const speedFactor = 1;
+
 const getRandom = (min: number, max: number) => Math.random() * (max - min) + min;
-const getDistance = (a: { x: number; y: number }, b: { x: number; y: number }) => Math.hypot(a.x - b.x, a.y - b.y);
+const getDistance = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+  Math.hypot(a.x - b.x, a.y - b.y);
 
-const RandomWalkMode: React.FC = () => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [points, setPoints] = useState<Point[]>([]);
-  const [mouse, setMouse] = useState<{ x: number; y: number; inside: boolean }>({ x: 0, y: 0, inside: false });
-  const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+const RandomWalkerCanvas: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pointsRef = useRef<Point[]>([]);
+  const mouseRef = useRef<{ x: number; y: number; inside: boolean }>({ x: 0, y: 0, inside: false });
+  const animationFrameRef = useRef<number>(null);
+  const colorRef = useRef<string>('');
 
-  const numPoints = 50;
-  const maxConnectionDistance = 200;
-  const maxMouseDistance = 300;
-  const maxConnectionsPerPoint = 10;
-  const maxConnectionsToMouse = 10;
-  const speedFactor = 2;
+  const resizeCanvas = () => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (canvas && container) {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    }
+  };
+
+  const getCSSColor = (variableName: string): string => {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(variableName)
+      .trim();
+  };
 
   useEffect(() => {
-    const updateSize = () => {
-      if (svgRef.current) {
-        const { width, height } = svgRef.current.getBoundingClientRect();
-        setDimensions({ width, height });
-      }
-    };
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
   }, []);
 
   useEffect(() => {
-    if (dimensions.width && dimensions.height) {
-      const newPoints: Point[] = Array.from({ length: numPoints }, () => ({
-        x: getRandom(0, dimensions.width),
-        y: getRandom(0, dimensions.height),
-        dx: getRandom(-1, 1) * speedFactor,
-        dy: getRandom(-1, 1) * speedFactor,
-        radius: getRandom(2, 5),
-        opacity: getRandom(0.3, 1),
-      }));
-      setPoints(newPoints);
-    }
-  }, [dimensions]);
+    const updateColor = () => {
+      colorRef.current = getCSSColor('--color-8');
+    };
+    updateColor();
 
-  useEffect(() => {
-    let animationFrame: number;
+    const observer = new MutationObserver(updateColor);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme'],
+    });
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Inicializa pontos
+    pointsRef.current = Array.from({ length: numPoints }, () => ({
+      x: getRandom(0, canvas.width),
+      y: getRandom(0, canvas.height),
+      dx: getRandom(-1, 1) * speedFactor,
+      dy: getRandom(-1, 1) * speedFactor,
+      radius: getRandom(minRadius, maxRadius),
+      opacity: getRandom(minOpacity, maxOpacity),
+    }));
 
     const animate = () => {
-      setPoints((prevPoints) =>
-        prevPoints.map((p) => {
-          let newX = p.x + p.dx;
-          let newY = p.y + p.dy;
+      if (!ctx || !canvas) return;
 
-          if (newX < 0 || newX > dimensions.width) p.dx *= -1;
-          if (newY < 0 || newY > dimensions.height) p.dy *= -1;
+      // Limpa o canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-          return {
-            ...p,
-            x: Math.max(0, Math.min(newX, dimensions.width)),
-            y: Math.max(0, Math.min(newY, dimensions.height)),
-          };
-        })
-      );
-      animationFrame = requestAnimationFrame(animate);
+      const points = pointsRef.current;
+      const mouse = mouseRef.current;
+
+      // Atualiza posições
+      for (let p of points) {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+        p.x = Math.max(0, Math.min(p.x, canvas.width));
+        p.y = Math.max(0, Math.min(p.y, canvas.height));
+      }
+
+      // Desenha círculos
+      for (let p of points) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = colorRef.current
+        ctx.fill();
+      }
+
+      // Linhas entre pontos
+      for (let i = 0; i < points.length; i++) {
+        const a = points[i];
+        const connections: { b: Point; dist: number }[] = [];
+
+        for (let j = i + 1; j < points.length; j++) {
+          const b = points[j];
+          const dist = getDistance(a, b);
+          if (dist <= maxConnectionDistance) {
+            connections.push({ b, dist });
+          }
+        }
+
+        connections
+          .sort((a, b) => a.dist - b.dist)
+          .slice(0, maxConnectionsPerPoint)
+          .forEach(({ b, dist }) => {
+            
+            const opacity = Math.max(0, maxOpacity - dist / maxConnectionDistance);
+            ctx.globalAlpha = opacity;
+            ctx.strokeStyle = colorRef.current
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          });
+      }
+
+      // Linhas para o mouse
+      if (mouse.inside) {
+        const distances = points
+          .map(p => ({ p, dist: getDistance(p, mouse) }))
+          .filter(({ dist }) => dist <= maxMouseDistance)
+          .sort((a, b) => a.dist - b.dist)
+          .slice(0, maxConnectionsToMouse);
+
+        for (let { p, dist } of distances) {
+          const opacity = Math.max(0, maxOpacity - dist / maxMouseDistance);
+          ctx.globalAlpha = opacity;
+          ctx.strokeStyle = colorRef.current
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
     animate();
-    return () => cancelAnimationFrame(animationFrame);
-  }, [dimensions]);
+    return () => cancelAnimationFrame(animationFrameRef.current!);
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+
+  const rect = canvasRef.current?.getBoundingClientRect();
+  if (rect) {
+    mouseRef.current.x = e.clientX - rect.left;
+    mouseRef.current.y = e.clientY - rect.top;
+  }
+  };
+
+  useEffect(() => {
+    const updateMousePosition = (e: MouseEvent) => {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (rect) {
+        mouseRef.current.x = e.clientX - rect.left;
+        mouseRef.current.y = e.clientY - rect.top;
+      }
+    };
+  
+    window.addEventListener('mousemove', updateMousePosition);
+    return () => window.removeEventListener('mousemove', updateMousePosition);
+  }, []);
 
   return (
     <div
+      ref={containerRef}
       className={styles.container}
-      onMouseMove={(e) => {
-        if (svgRef.current) {
-          const rect = svgRef.current.getBoundingClientRect();
-          setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top, inside: true });
-        }
-      }}
-      onMouseLeave={() => setMouse((m) => ({ ...m, inside: false }))}
-      onMouseEnter={() => setMouse((m) => ({ ...m, inside: true }))}
     >
-      <svg ref={svgRef} className={styles.svg}>
-        {points.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={p.radius} fill="black" fillOpacity={p.opacity} />
-        ))}
-
-        {mouse.inside && points
-          .map((p, i) => ({ p, i, dist: getDistance(p, mouse) }))
-          .filter(({ dist }) => dist <= maxMouseDistance)
-          .sort((a, b) => a.dist - b.dist)
-          .slice(0, maxConnectionsToMouse)
-          .map(({ p, i, dist }) => {
-            const normalizedOpacity = Math.max(0, 1 - dist / maxMouseDistance);
-            return (
-              <line
-                key={`line-to-mouse-${i}`}
-                className={styles.line}
-                x1={p.x}
-                y1={p.y}
-                x2={mouse.x}
-                y2={mouse.y}
-                style={{ strokeOpacity: normalizedOpacity, transition: 'stroke-opacity 0.3s ease' }}
-              />
-            );
-          })}
-
-        {points.map((a, i) => {
-          const connections = points
-            .slice(i + 1)
-            .map((b, j) => ({ b, j, dist: getDistance(a, b) }))
-            .filter(({ dist }) => dist <= maxConnectionDistance)
-            .sort((a, b) => a.dist - b.dist)
-            .slice(0, maxConnectionsPerPoint);
-
-          return connections.map(({ b, j, dist }) => {
-            const normalizedOpacity = Math.max(0, 1 - dist / maxConnectionDistance);
-            return (
-              <line
-                key={`line-${i}-${j}`}
-                className={styles.line}
-                x1={a.x}
-                y1={a.y}
-                x2={b.x}
-                y2={b.y}
-                style={{ strokeOpacity: normalizedOpacity, transition: 'stroke-opacity 0.3s ease' }}
-              />
-            );
-          });
-        })}
-      </svg>
+      <canvas
+        ref={canvasRef}
+        className={styles.svg}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => (mouseRef.current.inside = true)}
+        onMouseLeave={() => (mouseRef.current.inside = false)}
+      />
     </div>
   );
 };
 
-export default RandomWalkMode;
+export default RandomWalkerCanvas;

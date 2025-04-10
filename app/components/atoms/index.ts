@@ -1,4 +1,6 @@
 export { default as LinkItem } from './link-item'
-export { default as FooterLinkItem } from './footer-link-item'
+export { default as SimpleLinkItem } from './simple-link-item'
 export { default as SolarLogo } from './solar-logo'
 export { default as SfLogo } from './sf-logo'
+export { default as Perfil } from './perfil'
+export { default as SimpleButton } from './simple-button'

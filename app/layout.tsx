@@ -44,8 +44,8 @@ import { Open_Sans } from 'next/font/google'
 const font = Open_Sans({ subsets: ['latin']})
 
 export const metadata = {
-  title: 'My-NextJs-Project',
-  description: 'anything',
+  title: 'Projeto-Sistema-Fotovoltaico',
+  description: 'Dimensionamento e Simulação',
 }
 
 export default function RootLayout({

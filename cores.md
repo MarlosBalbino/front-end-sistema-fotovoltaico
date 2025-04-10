@@ -17,7 +17,7 @@
 .outras {
   color:#8884d8;
   color:#82ca9d;
-  color:#ff7300;
+  color:#ff7300; 
   color:#ff0000;
   color:#00ff00;
   color:#0000ff;

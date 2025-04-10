@@ -7,7 +7,7 @@
   flex-direction: column;
   /* justify-content: center; */
   align-items: center;
-  padding-top: 0rem;
+  padding-bottom: 2rem;
   gap: 2rem;
 }
 
@@ -22,19 +22,19 @@
   align-items: center;
 }
 
-.section_2 {
-  background-color: #8884d8;
+.section {
+  background-color: rgba(0, 0, 0, 0.3);
   width: 100%;
-  height: 100vh;  
+  min-height: calc(50% * 100vh);  
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 2rem;
-
+  padding : 2rem;
 }
 
 .alguma_coisa {
-  background-color: #ff7300;
+  /* background-color: #ff7300; */
   width: 60%;
   aspect-ratio: 16/9;
   display: flex;
@@ -43,33 +43,43 @@
   align-items: center;
 }
 
-.section_3 {
-  background-color: #82ca9d;
-  width: 100%;
-  height: 100vh;  
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  align-items: center;
-}
-
 .title {
   z-index: 10;
   color: var(--color-4);
   font-size: 40pt;
   font-weight: bold;
-
+  /* text-shadow: 5px 5px 20px #aaa; */
 }
 
 .sub {
   z-index: 10;
   font-size: 20pt;
+  /* text-shadow: 5px 5px 20px #aaa; */
 }
 
-.h1 {
+.h2 {
   font-size: 20pt;
-  font-weight: normal;
+  font-weight: bold;
 }
+
+.grid_container {
+  width: 100%;
+  /* background-color: #aaa; */
+  display: grid;
+  grid-template-columns: repeat(3, auto); /* 3 colunas, largura conforme conteúdo */
+  grid-template-rows: repeat(2, auto); /* 2 linhas */
+  gap: 1rem; /* espaço entre os itens */
+  justify-content: space-evenly; /* centraliza o grupo todo na tela */
+  justify-items: start; /* alinha os elementos à esquerda dentro das células */
+}
+
+.button_div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 /* ----------------------------------------*/
 

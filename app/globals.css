@@ -17,6 +17,8 @@ html, body, :root {
   --color-4: #3498DB;
   --color-5: #e6f4ff;
   --color-6: #ffffff;
+  --color-8: #333333;
+  --color-9: #e0dede;
   --color-background: #f9f9f9;
   --color-text:black;
   /* transition: ease-in-out 1s; */
@@ -29,6 +31,9 @@ html, body, :root {
   --color-4: #82ca9d;
   --color-5: #bce3cb;
   --color-6: #ffffff;
+  --color-7: #ffffff;
+  --color-8: #333333;
+  --color-9: #e0dede;
   --color-background: #f9f9f9;
   --color-text: black;
   /* transition: ease-in-out 1s; */
@@ -39,8 +44,11 @@ html, body, :root {
   --color-2: #1abc9c;
   --color-3: #0f7561;
   --color-4: #1abc9c;
-  --color-5: #bce3cb;
+  --color-5: #282a36;
   --color-6: #2c3e50;
+  --color-7: #282a36;
+  --color-8: #c3ccdf;
+  --color-9: #282a36;
   --color-background: #2c3e50;
   --color-text: rgb(221, 221, 221);
   /* transition: ease-in-out 1s; */
