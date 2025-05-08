@@ -1,0 +1,100 @@
+.main_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.plot_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.plot1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  max-width: 800px;
+  width: 100%;
+}
+
+.control_group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 240px;
+  flex: 1;
+}
+
+.group_title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.input {
+  width: 100%;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.slider {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #8884d8;
+  cursor: pointer;
+  border: 2px solid #555;
+  margin-top: -4px;
+}
+
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #8884d8;
+  cursor: pointer;
+  border: 2px solid #555;
+}

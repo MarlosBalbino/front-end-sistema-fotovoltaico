@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: black;
+  padding: 1rem;
+  color: white;
+  font-family: sans-serif;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: #111;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  width: 90%;
+  max-width: 1000px;
+}
+
+.signalBlock {
+  background: #222;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  flex: 1 1 300px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.controlGroup input[type="range"] {
+  width: 100%;
+}
+
+.controlGroup input[type="number"] {
+  width: 60px;
+  margin: 0 0.25rem;
+}
+
+.canvas {
+  border: 2px solid #555;
+  background: black;
+  max-width: 100%;
+}
