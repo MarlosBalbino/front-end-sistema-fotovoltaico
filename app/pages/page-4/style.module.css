@@ -12,11 +12,53 @@
   align-items: center;
 }
 
+.plot_container2 {
+  margin-top: 10px;
+  width: 80%;
+  aspect-ratio: 16/9;
+  /* background-color: aquamarine; */
+   
+  display: flex; 
+  flex-direction: column;
+}
+
+.select_container {
+  /* background-color: blueviolet; */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.select {
+  width: 10%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
 .plot1 {
   display: flex;
   flex-direction: row;
   align-items: center;
 
+}
+
+.black_box {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.black_box_params {
+  /* background-color: #8884d8; */
+  display: flex;
+  flex-direction: column;
+  
 }
 
 .panel {

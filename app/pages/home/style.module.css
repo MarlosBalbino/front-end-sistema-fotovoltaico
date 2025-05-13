@@ -86,7 +86,7 @@
 .plot_container {
   width: 70%;
   aspect-ratio: 16/9;
-  /* background-color: aquamarine; */
+  background-color: aquamarine;
    
   display: flex; 
   flex-direction: column;
