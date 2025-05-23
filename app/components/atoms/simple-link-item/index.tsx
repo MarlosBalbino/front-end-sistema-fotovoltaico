@@ -9,7 +9,9 @@ interface LinkProps {
 
 const SimpleLinkItem: React.FC<LinkProps> = ({ label, link }) => {
   return (
-    <Link href={link} className={style.linkItem}>{label}</Link>
+    <Link href={link} className={style.linkItem}>
+      {label}
+    </Link>
   )
 }
 

@@ -1,16 +1,103 @@
-.submit_button {
-  min-width: 50px;
-  padding: 10px;
-  margin-top: 15px;
-  background-color: var(--color-2);
-  color: var(--color-text);
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  padding: 0.75rem 1.75rem;
+  background-color: #8884d8;
+  color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 1em;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 1rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(136, 132, 216, 0.3);
 }
 
-.submit_button:hover {
-  background-color: var(--color-3);
+.button:hover {
+  background-color: #6a66b8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(136, 132, 216, 0.4);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(136, 132, 216, 0.4);
+}
+
+.button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.button:focus:not(:active)::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+
+/* Variantes */
+.button.secondary {
+  background-color: #f0f0f0;
+  color: #555;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button.secondary:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Tamanhos */
+.button.small {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.button.large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* Ícones */
+.button.with_icon {
+  gap: 0.5rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .button {
+    width: 100%;
+  }
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.button:hover .icon {
+  transform: translateX(4px);
 }

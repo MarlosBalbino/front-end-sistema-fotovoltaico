@@ -98,24 +98,27 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
     onSubmit();
   };
 
-  return (
+return (
     <form onSubmit={handleSubmit} className={style.form_container}>
       <div className={style.sub_container}>
-        <div >
-          <div className={style.div}>
-            <input
-              className={style.input_box}
-              type="checkbox"
-              checked={formData.useDefaultData}
-              onChange={() => handleExclusiveCheck("useDefaultData")}
-            />
-            <label className={style.label}>Preencher dados</label>
+        {/* Seção de Preenchimento Manual */}
+        <div>
+          <div className={style.form_group}>
+            <label className={style.label}>
+              <input
+                className={style.input_box}
+                type="checkbox"
+                checked={formData.useDefaultData}
+                onChange={() => handleExclusiveCheck("useDefaultData")}
+              />
+              Preencher dados manualmente
+            </label>
           </div>
 
           <fieldset className={style.form_section} disabled={!formData.useDefaultData}>
             <legend className={style.legend}>Dados da residência</legend>
             
-            <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+            <div className={style.row_inputs}>
               <input
                 className={style.input}
                 type="text"
@@ -138,7 +141,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
               className={style.input}
               type="number"
               name="consumo"
-              placeholder="Consumo mensal"
+              placeholder="Consumo mensal (kWh)"
               value={formData.consumo}
               onChange={handleChange}
             />
@@ -161,7 +164,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
               className={style.input}
               type="number"
               name="inclinacao"
-              placeholder="Inclinação"
+              placeholder="Inclinação (graus)"
               value={formData.inclinacao}
               onChange={handleChange}
             />
@@ -169,7 +172,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
               className={style.input}
               type="text"
               name="orientacao"
-              placeholder="Orientação"
+              placeholder="Orientação (ex: Norte)"
               value={formData.orientacao}
               onChange={handleChange}
             />
@@ -177,7 +180,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
               className={style.input}
               type="text"
               name="modelo"
-              placeholder="Modelo"
+              placeholder="Modelo do painel"
               value={formData.modelo}
               onChange={handleChange}
             />
@@ -186,15 +189,18 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
 
         <div className={style.vertical_line}></div>
 
+        {/* Seção de Importação de Arquivo */}
         <div>
-          <div className={style.div}>
-            <input
-              className={style.input_box}
-              type="checkbox"
-              checked={formData.importFile}
-              onChange={() => handleExclusiveCheck("importFile")}
-            />
-            <label className={style.label}>Importar arquivo CSV</label>
+          <div className={style.form_group}>
+            <label className={style.label}>
+              <input
+                className={style.input_box}
+                type="checkbox"
+                checked={formData.importFile}
+                onChange={() => handleExclusiveCheck("importFile")}
+              />
+              Importar arquivo CSV
+            </label>
           </div>
 
           <input
@@ -206,18 +212,23 @@ export default function DimensionForm({ onSubmit }: { onSubmit: () => void }) {
             accept=".csv"
           />
 
-          {!formData.useDefaultData && (          
-          <div className={style.file_info}>
-            <p className={style.attention}> Atenção! O formulário enviado deve seguir o formato especificado {<Link className={style.attention} href="sdf"> aqui! </Link>} </p>
-            
-            <Link className={style.download} href={`/form.csv`}> Baixar modelo de formulário. </Link>
-          </div>)}  
-
+          {formData.importFile && (          
+            <div className={style.file_info}>
+              <p className={style.attention}>
+                Atenção! O arquivo CSV deve seguir o formato especificado 
+                <Link href="/formato-csv" className={style.download}> aqui</Link>.
+              </p>
+              
+              <Link className={style.download} href="/form.csv" download>
+                <span>Baixar modelo de formulário</span>
+              </Link>
+            </div>
+          )}  
         </div>
       </div>
 
       <button type="submit" className={style.submit_button}>
-        Enviar
+        Calcular Dimensionamento
       </button>
     </form>
   );

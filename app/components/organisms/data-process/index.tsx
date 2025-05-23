@@ -147,80 +147,89 @@ export default function DataProcessing({ update }: { update: boolean }) {
 
   return (
     <div className={style.main_container}>
-      <div className={style.locations}>
-          <label className={style.label}>Localidades disponíveis (estações)</label>
-
-          {estacoes.map((estacao, idx) => (
-            <div
-              key={idx}
-              className={style.estacaoBox}
-              onClick={() => setSelecionada(estacao)}
-              style={{ cursor: "pointer" }}
-            >
-              <h3>
-                {estacao.nome}
-              </h3>
-              <p>
-                Municipio: {estacao.municipio}, Lat: {estacao.latitude}, Lon: {estacao.longitude}
-              </p>
-            </div>
-          ))}
-      </div>
-
-      <div className={style.vertical_line}></div>
-
-      {selecionada && (
-        <div className={style.data}>
-          <div className={style.location_data}>
-            <label className={style.label}>Dados da localidade</label>
+      {/* <h2 className={style.section_title}>Processamento de Dados de Irradiância</h2> */}
+      
+      <div className={style.content_container}>
+        <div className={style.locations}>
+          {/* <h3>Localidades disponíveis (estações)</h3> */}
           
-            <div className={style.scroll_container}>
-              <table className={style.table}>
-                <thead>                  
-                  <tr> 
-                    <th>''</th>                   
-                    {Object.values(selecionada.dados_est).slice(0, 1).map((dados_k) => (
-                      Object.keys(dados_k).map((mes, i) => (
-                        <th key={i}>{mes}</th>
-                      ))
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>          
-                  {Object.keys(selecionada.dados_est).map((dados_k, j) => (
-                    <tr key={j}>
-                      <td>
-                        <input className={style.input_box}
-                          type="checkbox"
-                          checked={irradianciasSelecionadas.includes(dados_k)}
-                          onChange={() => toggleSerie(dados_k)}
-                        />
-                      </td>
-                      {Object.values(selecionada.dados_est[dados_k]).map((value, i) => (
-                        <th key={i}>{value}</th>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {/* <div>
-                {irradianciasSelecionadas.map((serie, i) => (
-                  <label key={i}>{serie}</label>
-                ))}
-              </div> */}
-            </div>          
+          <div className={style.locations_grid}>
+            {estacoes.map((estacao, idx) => (
+              <div
+                key={idx}
+                className={`${style.estacao_card} ${selecionada?.nome === estacao.nome ? style.selected : ''}`}
+                onClick={() => setSelecionada(estacao)}
+              >
+                <h4 className={style.estacao_name}>{estacao.nome}</h4>
+                <div className={style.estacao_details}>
+                  <p>Município: {estacao.municipio}</p>
+                  <p>Latitude: {estacao.latitude}</p>
+                  <p>Longitude: {estacao.longitude}</p>
+                </div>
+              </div>
+            ))}
           </div>
-
-          <div className={style.vertical_line}></div>
-
-          {irradianciasSelecionadas.length > 0 && (
-            <div className={style.irr_data}>
-              <label className={style.label}>Gráfico de Irradiância</label>          
-                <IrradChart irradiancias={irradiancias} labels={irradianciasSelecionadas}/>            
-            </div>
-          )}
         </div>
-      )}
+
+        {selecionada && (
+          <>
+            <hr className={style.section_divider} />
+            
+            <div className={style.data_container}>
+              <div className={style.table_container}>
+                <h3>Dados da localidade selecionada</h3>
+                
+                <div className={style.scroll_container}>
+                  <table className={style.table}>
+                    <thead>                  
+                      <tr> 
+                        <th>Selecionar</th>
+                        {/* Extrai cabeçalhos do primeiro item de dados_est se existir */}
+                        {Object.keys(selecionada.dados_est).length > 0 && 
+                          Object.keys(Object.values(selecionada.dados_est)[0]).map((mes, i) => (
+                            <th key={i}>{mes}</th>
+                          ))
+                        }
+                      </tr>
+                    </thead>
+                    <tbody>          
+                      {Object.entries(selecionada.dados_est).map(([dados_k, valores], j) => (
+                        <tr key={j}>
+                          <td className={style.checkbox_cell}>
+                            <input 
+                              className={style.input_box}
+                              type="checkbox"
+                              checked={irradianciasSelecionadas.includes(dados_k)}
+                              onChange={() => toggleSerie(dados_k)}
+                            />
+                          </td>
+                          {Object.values(valores).map((value, i) => (
+                            <td key={i}>{String(value)}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>          
+              </div>
+
+              {irradianciasSelecionadas.length > 0 && (
+                <>
+                  <hr className={style.section_divider} />
+                  
+                  <div className={style.chart_container}>
+                    <h3>Gráfico de Irradiância</h3>
+                    <IrradChart 
+                      irradiancias={irradiancias} 
+                      labels={irradianciasSelecionadas}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

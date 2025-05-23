@@ -1,0 +1,38 @@
+.logoContainer {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logoContainer:hover {
+  transform: scale(1.05);
+}
+
+.logoSvg {
+  transition: transform 0.3s ease;
+}
+
+.solarCell {
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+  fill: var(--color-bg-light); /* #f8f9fa */
+}
+
+.solarCell:hover {
+  fill: #fff;
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+/* Gradiente para o fundo do logo */
+.logoBackground {
+  fill: url(#logoGradient);
+  stroke: var(--color-text-primary); /* #2C3E50 */
+  stroke-width: 2;
+  rx: 5; /* border-radius */
+}

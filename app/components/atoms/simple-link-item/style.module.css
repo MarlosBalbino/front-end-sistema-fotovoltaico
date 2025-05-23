@@ -1,12 +1,35 @@
 .linkItem {
-  text-decoration: underline;
-  font-size: 10pt;
-  /* transition-property: color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms; */
+  text-decoration: none;
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 500;
   white-space: nowrap;
+  position: relative;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
 }
 
 .linkItem:hover {
-  color: #707070;
+  color: #8884d8;
+}
+
+.linkItem::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8884d8, #82ca9d);
+  transition: width 0.3s ease;
+}
+
+.linkItem:hover::after {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .linkItem {
+    font-size: 0.9rem;
+  }
 }

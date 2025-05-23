@@ -1,37 +1,90 @@
+import React from 'react';
+import styles from './style.module.css';
 
 interface LogoProps {
-  size: number
+  size: number;
 }
 
 const SolarLogo: React.FC<LogoProps> = ({ size }) => {
-  
   return (
-    <div style={{ /*backgroundColor: '#FFD700', */ width: `${size}px`, height: `${size}px`}}>
-      {/* <p >SISTEMA</p> */}
-      <svg width={size} height={size} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-
-      {/* <text x="40" y="40" font-family="Arial" font-size="16" text-anchor="middle" fill="#2C3E50" font-weight="bold">SISTEMA</text> */}
+    <div className={styles.logoContainer} style={{ width: `${size}px`, height: `${size}px` }}>
+      <svg 
+        width={size} 
+        height={size} 
+        viewBox="0 0 200 200" 
+        xmlns="http://www.w3.org/2000/svg"
+        className={styles.logoSvg}
+      >
+        {/* Definindo o gradiente */}
+        <defs>
+          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#8884d8" />
+            <stop offset="100%" stopColor="#82ca9d" />
+          </linearGradient>
+        </defs>
         
-        <rect x="50" y="50" width="100" height="100" fill="#2C3E50" rx="5"/>
+        {/* Fundo com gradiente */}
+        <rect 
+          x="50" 
+          y="50" 
+          width="100" 
+          height="100" 
+          className={styles.logoBackground}
+        />
         
-       
-        <rect x="60" y="60" width="20" height="20" fill='var(--color-4)'/>
-        <rect x="85" y="60" width="20" height="20" fill='var(--color-4)'/>
-        <rect x="110" y="60" width="20" height="20" fill='var(--color-4)'/>
+        {/* Células solares animadas */}
+        {/* Linha 1 */}
+        <rect 
+          x="60" y="60" width="20" height="20" 
+          className={styles.solarCell}
+        />
+        <rect 
+          x="85" y="60" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.1s' }}
+        />
+        <rect 
+          x="110" y="60" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.2s' }}
+        />
         
-        <rect x="60" y="85" width="20" height="20" fill='var(--color-4)'/>
-        <rect x="85" y="85" width="20" height="20" fill='var(--color-4)'/>
-        <rect x="110" y="85" width="20" height="20" fill='var(--color-4)'/>
+        {/* Linha 2 */}
+        <rect 
+          x="60" y="85" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.3s' }}
+        />
+        <rect 
+          x="85" y="85" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.4s' }}
+        />
+        <rect 
+          x="110" y="85" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.5s' }}
+        />
         
-        <rect x="60" y="110" width="20" height="20" fill='var(--color-4)'/>
-        <rect x="85" y="110" width="20" height="20" fill='var(--color-4)'/>
-        <rect x="110" y="110" width="20" height="20" fill='var(--color-4)'/>
-        
-        {/* <text x="110" y="170" font-family="Arial" font-size="16" text-anchor="middle" fill="#2C3E50" font-weight="bold">FOTOVOLTAICO</text> */}
+        {/* Linha 3 */}
+        <rect 
+          x="60" y="110" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.6s' }}
+        />
+        <rect 
+          x="85" y="110" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.7s' }}
+        />
+        <rect 
+          x="110" y="110" width="20" height="20" 
+          className={styles.solarCell}
+          style={{ animationDelay: '0.8s' }}
+        />
       </svg>
-      {/* <p style={{display: 'flex', justifyContent: 'flex-end'}}>FOTOVOLTAICO</p>   */}
     </div>
-  )
-}
+  );
+};
 
-export default SolarLogo
+export default SolarLogo;
