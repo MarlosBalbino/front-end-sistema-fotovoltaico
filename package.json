@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "classnames": "^2.5.1",
+    "mathjs": "^14.5.0",
+    "ml-matrix": "^6.12.1",
     "next": "15.2.2",
     "papaparse": "^5.5.2",
     "react": "^19.0.0",

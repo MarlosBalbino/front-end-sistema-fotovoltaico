@@ -1,629 +1,280 @@
 'use client'
 
-import { Plot, Results } from "@organisms";
-import { useEffect, useState } from "react";
-import style from './style.module.css'
+import { useState } from 'react';
+import style from './style.module.css';
+
+type PvInput = {
+  Isc: string;
+  Voc: string;
+  Imp: string;
+  Vmp: string;
+  Ns: string;
+  Tstc: string;
+  ki: string;
+  kv: string;
+};
+
+type PvResult = {
+  Rs: number;
+  Rsh: number;
+  A: number;
+  iterations: number;
+  success: boolean;
+  error?: string;
+};
+
+type PvModel = {
+  name: string;
+  params: Omit<PvInput, 'Tstc'>;
+};
+
+const PV_MODELS: Record<string, PvModel> = {
+  bpmsx: {
+    name: "BP-MSX120",
+    params: {
+      Isc: "3.87",
+      Voc: "42.1",
+      Imp: "3.56",
+      Vmp: "33.7",
+      Ns: "72",
+      ki: "-0.005",
+      kv: "-0.16"
+    }
+  },
+  byd: {
+    name: "BYD-335PHK",
+    params: {
+      Isc: "9.252",
+      Voc: "45.44",
+      Imp: "8.794",
+      Vmp: "38.10",
+      Ns: "144",
+      ki: "0.00057",
+      kv: "-0.00285"
+    }
+  },
+  era: {
+    name: "ERA-RC66HD",
+    params: {
+      Isc: "16.05",
+      Voc: "49.25",
+      Imp: "14.85",
+      Vmp: "41.3",
+      Ns: "120",
+      ki: "0.00045",
+      kv: "-0.0023"
+    }
+  },
+  canadian: {
+    name: "CANADIAN-HiKu7",
+    params: {
+      Isc: "18.42",
+      Voc: "41.1",
+      Imp: "17.15",
+      Vmp: "34.7",
+      Ns: "120",
+      ki: "0.00050",
+      kv: "-0.00260"
+    }
+  }
+};
+
+const DEFAULT_PLACEHOLDERS: PvInput = {
+  Isc: "Ex: 8.21",
+  Voc: "Ex: 32.9",
+  Imp: "Ex: 7.61",
+  Vmp: "Ex: 26.3",
+  Ns: "Ex: 60",
+  Tstc: "25 (fixo)",
+  ki: "Ex: 0.003",
+  kv: "Ex: -0.123"
+};
 
 export default function Page3() {
-  // const [update, setUpdate] = useState(false);
-
-  // const handleSubmit = () => {
-  //   setUpdate(prev => !prev); // força o re-render dos componentes dependentes
-  // };
-
-    // Estados para parâmetros do painel
-  const [panelParams, setPanelParams] = useState({
-    isc: '',
-    voc: '',
-    impp: '',
-    vmp: '',
-    ns: '',
-    ki: '',
-    kv: ''
+  const [useModel, setUseModel] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [form, setForm] = useState<PvInput>({
+    Isc: "",
+    Voc: "",
+    Imp: "",
+    Vmp: "",
+    Ns: "",
+    Tstc: "25",
+    ki: "",
+    kv: ""
   });
 
-  // Estados para condições ambientais
-  const [environmentalConditions, setEnvironmentalConditions] = useState({
-    g: '',
-    t: ''
-  });
+  const [result, setResult] = useState<PvResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  // Estados para configuração de módulos
-  const [moduleConfig, setModuleConfig] = useState({
-    nSeries: '',
-    nParallel: ''
-  });
-
-  // Estados para resultados
-  const [results, setResults] = useState({
-    // Parâmetros extraídos
-    rs: null,
-    rsh: null,
-    a: null,
+  const handleModelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const modelKey = e.target.value;
+    setSelectedModel(modelKey);
     
-    // Correntes-base
-    io: null,
-    iph: null,
-    vt: null,
-    
-    // Ponto de MPP
-    vMpp: null,
-    iMpp: null,
-    pMpp: null,
-    
-    // Arrays para curvas (inicialmente vazios)
-    vs: [],
-    is: [],
-    ps: [],
-    vsSeries: [],
-    isSeries: [],
-    psSeries: [],
-    vsParallel: [],
-    isParallel: [],
-    psParallel: []
-  });
+    if (modelKey) {
+      setForm({
+        ...PV_MODELS[modelKey].params,
+        Tstc: "25" // Mantém a temperatura fixa
+      });
+    }
+  };
 
-  // Manipuladores de mudança para os inputs
-  const handlePanelParamChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPanelParams(prev => ({
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Se estiver usando modelo, limpa a seleção ao editar manualmente
+    if (useModel && selectedModel) {
+      setSelectedModel('');
+    }
+    
+    setForm(prev => ({
       ...prev,
-      [name]: value
+      [e.target.name]: e.target.value
     }));
   };
 
-  const handleEnvironmentalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEnvironmentalConditions(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const handleSubmit = async () => {
+    setLoading(true);
+    setErrorMsg('');
+    setResult(null);
+
+    try {
+      // Converte para número antes de enviar
+      const numericForm = {
+        Isc: parseFloat(form.Isc),
+        Voc: parseFloat(form.Voc),
+        Imp: parseFloat(form.Imp),
+        Vmp: parseFloat(form.Vmp),
+        Ns: parseFloat(form.Ns),
+        Tstc: parseFloat(form.Tstc) + 273.15, // Converte para Kelvin
+        ki: parseFloat(form.ki),
+        kv: parseFloat(form.kv)
+      };
+
+      const res = await fetch('/api/run-python', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(numericForm)
+      });
+
+      const data: PvResult = await res.json();
+
+      if (data.success) {
+        setResult(data);
+      } else {
+        setErrorMsg(data.error || 'Erro desconhecido');
+      }
+    } catch (err) {
+      setErrorMsg('Erro ao chamar a API.');
+      console.error('API Error:', err);
+    }
+
+    setLoading(false);
   };
 
-  const handleModuleConfigChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setModuleConfig(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-    // Função para calcular a curva característica
-  // const calculateCharacteristicCurve = () => {
-  //   // Aqui você implementará os cálculos reais
-  //   // Esta é uma estrutura básica para demonstração
-    
-  //   // Exemplo de cálculo simulado (substitua pela lógica real)
-  //   const simulatedResults = {
-  //     rs: 0.42,
-  //     rsh: 312.5,
-  //     a: 1.3,
-  //     io: 9.32e-10,
-  //     iph: parseFloat(panelParams.isc),
-  //     vt: 1.12,
-  //     vMpp: parseFloat(panelParams.vmp),
-  //     iMpp: parseFloat(panelParams.impp),
-  //     pMpp: parseFloat(panelParams.vmp) * parseFloat(panelParams.impp),
-  //     vs: Array.from({length: 100}, (_, i) => i * parseFloat(panelParams.voc) / 100),
-  //     is: Array.from({length: 100}, (_, i) => parseFloat(panelParams.isc) * (1 - i/99)),
-  //     ps: Array.from({length: 100}, (_, i) => i * parseFloat(panelParams.voc) / 100 * parseFloat(panelParams.isc) * (1 - i/99))
-  //   };
-
-  //   setResults({
-  //     ...results,
-  //     ...simulatedResults
-  //   });
-  // };
-
-  // Função para lidar com o envio do formulário
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(panelParams)
-    // calculateCharacteristicCurve();
-  };
-
-  
-
-  return (    
+  return (
     <div className={style.main_container}>
-      {/* Seção de Entradas */}
       <div className={style.section}>
-        <h2 className={style.section_title}>Entradas</h2>
-        
-        {/* Parâmetros do painel */}
+        <h2 className={style.section_title}>Calculadora de Parâmetros PV</h2>
+
+        {/* Checkbox para usar modelo */}
+        <div className={style.checkbox_container}>
+          <input
+            type="checkbox"
+            id="useModel"
+            checked={useModel}
+            onChange={(e) => setUseModel(e.target.checked)}
+            className={style.checkbox_input}
+          />
+          <label htmlFor="useModel" className={style.checkbox_label}>
+            Usar modelo pré-definido
+          </label>
+        </div>
+
+        {/* Seletor de modelo (visível apenas quando checkbox marcada) */}
+        {useModel && (
+          <div className={style.subsection}>
+            <label htmlFor="model-select" className={style.select_label}>
+              Selecione um modelo :
+            </label>
+            <select
+              id="model-select"
+              value={selectedModel}
+              onChange={handleModelChange}
+              className={style.model_select}
+            >
+              <option value="">-----</option>
+              {Object.entries(PV_MODELS).map(([key, model]) => (
+                <option key={key} value={key}>{model.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Formulário de parâmetros */}
         <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Parâmetros do painel (datasheet)</h3>
-          <div className={style.grid_container}>
-            <div className={style.parameter_card}>
-              <label>Isc – Corrente de curto-circuito (A)</label>
+          <h3 className={style.subsection_title}>
+            {useModel ? 'Parâmetros do Modelo' : 'Insira os Parâmetros'}
+          </h3>
+          <div className={style.parameters_grid}>
+            {Object.entries(form).map(([key, value]) => (
+              <div key={key} className={style.parameter_card}>
+                <label htmlFor={key}>
+                  {key}:
+                </label>
                 <input
-                  type="number"
-                  name="isc"
-                  value={panelParams.isc}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: 8.21"
-                  step="0.01"
-                  required
+                  id={key}
+                  type="text"
+                  name={key}
+                  value={value}
+                  onChange={handleChange}
+                  placeholder={DEFAULT_PLACEHOLDERS[key as keyof PvInput]}
+                  disabled={key === 'Tstc'}
+                  className={style.parameter_input}
                 />
-            </div>
-            <div className={style.parameter_card}>
-              <label>Voc – Tensão de circuito-aberto (V)</label>
-                <input
-                  type="number"
-                  name="voc"
-                  value={panelParams.voc}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: 32.9"
-                  step="0.1"
-                  required
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>Impp – Corrente no MPP (A)</label>
-                <input
-                  type="number"
-                  name="impp"
-                  value={panelParams.impp}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: 7.61"
-                  step="0.01"
-                  required
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>Vmp – Tensão no MPP (V)</label>
-                <input
-                  type="number"
-                  name="vmp"
-                  value={panelParams.vmp}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: 26.3"
-                  step="0.1"
-                  required
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>Ns – Número de células em série</label>
-                <input
-                  type="number"
-                  name="ns"
-                  value={panelParams.ns}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: 60"
-                  min="1"
-                  required
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>ki – Coef. temperatura de Isc (/°C)</label>
-                <input
-                  type="number"
-                  name="ki"
-                  value={panelParams.ki}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: 0.003"
-                  step="0.0001"
-                  required
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>kv – Coef. temperatura de Voc (V/°C)</label>
-                <input
-                  type="number"
-                  name="kv"
-                  value={panelParams.kv}
-                  onChange={handlePanelParamChange}
-                  placeholder="Ex: -0.123"
-                  step="0.001"
-                  required
-                />
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        <hr className={style.subsection_divider} />
-
-        {/* Condições ambientais */}
-        <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Condições ambientais</h3>
-          <div className={style.grid_container}>
-            <div className={style.parameter_card}>
-              <label>G – Irradiância (W/m²)</label>
-                <input
-                  type="number"
-                  name="g"
-                  value={environmentalConditions.g}
-                  onChange={handleEnvironmentalChange}
-                  placeholder="Ex: 1000"
-                  min="0"
-                  required
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>T – Temperatura ambiente (°C)</label>
-                <input
-                  type="number"
-                  name="t"
-                  value={environmentalConditions.t}
-                  onChange={handleEnvironmentalChange}
-                  placeholder="Ex: 25"
-                  step="0.1"
-                  required
-                />
-            </div>
-          </div>
-        </div>
-
-        <hr className={style.subsection_divider} />
-
-        {/* Configuração de módulos */}
-        <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Configuração de módulos (opcional)</h3>
-          <div className={style.grid_container}>
-            <div className={style.parameter_card}>
-              <label>n_series – Módulos em série</label>
-                <input
-                  type="number"
-                  name="nSeries"
-                  value={moduleConfig.nSeries}
-                  onChange={handleModuleConfigChange}
-                  placeholder="Ex: 2"
-                  min="1"
-                />
-            </div>
-            <div className={style.parameter_card}>
-              <label>n_parallel – Módulos em paralelo</label>
-                <input
-                  type="number"
-                  name="nParallel"
-                  value={moduleConfig.nParallel}
-                  onChange={handleModuleConfigChange}
-                  placeholder="Ex: 3"
-                  min="1"
-                />
-            </div>
-          </div>
-        </div>
-
-        <button className={style.calculate_button} onClick={handleSubmit}>
-          Calcular Curva Característica
+        <button
+          className={style.calculate_button}
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? 'Calculando...' : 'Calcular Parâmetros'}
         </button>
+
+        {errorMsg && (
+          <div className={style.error_message}>
+            <strong>Erro:</strong> {errorMsg}
+          </div>
+        )}
       </div>
 
-      <hr className={style.section_divider} />
-
-      {/* Seção de Saídas */}
-      <div className={style.section}>
-        <h2 className={style.section_title}>Saídas</h2>
-        
-        {/* Parâmetros extraídos */}
-        <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Parâmetros extraídos</h3>
-          <div className={style.grid_container}>
+      {1 && ( //results && (
+        <div className={style.section}>
+          <h3 className={style.subsection_title}>Resultados</h3>
+          <div className={style.results_grid}>
             <div className={style.result_card}>
-              <span>Rs – Resistência série (Ω)</span>
-              <strong>0.42</strong>
+              <span>Rs</span>
+              {result ? <strong>{result.Rs.toFixed(4)} Ω</strong> : <strong>-</strong> }
             </div>
             <div className={style.result_card}>
-              <span>Rsh – Resistência shunt (Ω)</span>
-              <strong>312.5</strong>
+              <span>Rsh</span>
+              {result ? <strong>{result.Rsh.toFixed(2)} Ω</strong> : <strong>-</strong> }
             </div>
             <div className={style.result_card}>
-              <span>A – Fator de idealidade</span>
-              <strong>1.3</strong>
+              <span>A</span>
+              {result ? <strong>{result.A.toFixed(4)} Ω</strong> : <strong>-</strong> }      
             </div>
           </div>
+          {result ? result.iterations && (
+            <div className={style.iteration_count}>
+              <strong>Iterações:</strong> {result.iterations}
+            </div>
+          ) : <></>}
         </div>
-
-        <hr className={style.subsection_divider} />
-
-        {/* Correntes-base */}
-        <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Correntes-base</h3>
-          <div className={style.grid_container}>
-            <div className={style.result_card}>
-              <span>Io – Corrente de saturação (A)</span>
-              <strong>9.32e-10</strong>
-            </div>
-            <div className={style.result_card}>
-              <span>Iph – Corrente foto-gerada (A)</span>
-              <strong>8.21</strong>
-            </div>
-            <div className={style.result_card}>
-              <span>Vt – Tensão térmica (V)</span>
-              <strong>1.12</strong>
-            </div>
-          </div>
-        </div>
-
-        <hr className={style.subsection_divider} />
-
-        {/* Ponto de Máxima Potência */}
-        <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Ponto de Máxima Potência (MPP)</h3>
-          <div className={style.grid_container}>
-            <div className={style.result_card}>
-              <span>V_mpp – Tensão (V)</span>
-              <strong>26.3</strong>
-            </div>
-            <div className={style.result_card}>
-              <span>I_mpp – Corrente (A)</span>
-              <strong>7.61</strong>
-            </div>
-            <div className={style.result_card}>
-              <span>P_mpp – Potência (W)</span>
-              <strong>200.1</strong>
-            </div>
-          </div>
-        </div>
-
-        <hr className={style.subsection_divider} />
-
-        {/* Gráficos */}
-        <div className={style.subsection}>
-          <h3 className={style.subsection_title}>Gráficos</h3>
-          <div className={style.plot_container}>
-            {/* <Plot title="Curva IV" />
-            <Plot title="Curva PV" /> */}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
-
-
-  // return (    
-  //   <div className={style.main_container}>
-  //     <form onSubmit={handleSubmit}>
-  //       {/* Seção de Entradas */}
-  //       <div className={style.section}>
-  //         <h2 className={style.section_title}>Entradas</h2>
-          
-  //         {/* Parâmetros do painel */}
-  //         <div className={style.subsection}>
-  //           <h3 className={style.subsection_title}>Parâmetros do painel (datasheet)</h3>
-  //           <div className={style.grid_container}>
-  //             <div className={style.parameter_card}>
-  //               <label>Isc – Corrente de curto-circuito (A)</label>
-  //               <input
-  //                 type="number"
-  //                 name="isc"
-  //                 value={panelParams.isc}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: 8.21"
-  //                 step="0.01"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>Voc – Tensão de circuito-aberto (V)</label>
-  //               <input
-  //                 type="number"
-  //                 name="voc"
-  //                 value={panelParams.voc}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: 32.9"
-  //                 step="0.1"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>Impp – Corrente no MPP (A)</label>
-  //               <input
-  //                 type="number"
-  //                 name="impp"
-  //                 value={panelParams.impp}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: 7.61"
-  //                 step="0.01"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>Vmp – Tensão no MPP (V)</label>
-  //               <input
-  //                 type="number"
-  //                 name="vmp"
-  //                 value={panelParams.vmp}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: 26.3"
-  //                 step="0.1"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>Ns – Número de células em série</label>
-  //               <input
-  //                 type="number"
-  //                 name="ns"
-  //                 value={panelParams.ns}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: 60"
-  //                 min="1"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>ki – Coef. temperatura de Isc (/°C)</label>
-  //               <input
-  //                 type="number"
-  //                 name="ki"
-  //                 value={panelParams.ki}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: 0.003"
-  //                 step="0.0001"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>kv – Coef. temperatura de Voc (V/°C)</label>
-  //               <input
-  //                 type="number"
-  //                 name="kv"
-  //                 value={panelParams.kv}
-  //                 onChange={handlePanelParamChange}
-  //                 placeholder="Ex: -0.123"
-  //                 step="0.001"
-  //                 required
-  //               />
-  //             </div>
-  //           </div>
-  //         </div>
-
-  //         <hr className={style.subsection_divider} />
-
-  //         {/* Condições ambientais */}
-  //         <div className={style.subsection}>
-  //           <h3 className={style.subsection_title}>Condições ambientais</h3>
-  //           <div className={style.grid_container}>
-  //             <div className={style.parameter_card}>
-  //               <label>G – Irradiância (W/m²)</label>
-  //               <input
-  //                 type="number"
-  //                 name="g"
-  //                 value={environmentalConditions.g}
-  //                 onChange={handleEnvironmentalChange}
-  //                 placeholder="Ex: 1000"
-  //                 min="0"
-  //                 required
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>T – Temperatura ambiente (°C)</label>
-  //               <input
-  //                 type="number"
-  //                 name="t"
-  //                 value={environmentalConditions.t}
-  //                 onChange={handleEnvironmentalChange}
-  //                 placeholder="Ex: 25"
-  //                 step="0.1"
-  //                 required
-  //               />
-  //             </div>
-  //           </div>
-  //         </div>
-
-  //         <hr className={style.subsection_divider} />
-
-  //         {/* Configuração de módulos */}
-  //         <div className={style.subsection}>
-  //           <h3 className={style.subsection_title}>Configuração de módulos (opcional)</h3>
-  //           <div className={style.grid_container}>
-  //             <div className={style.parameter_card}>
-  //               <label>n_series – Módulos em série</label>
-  //               <input
-  //                 type="number"
-  //                 name="nSeries"
-  //                 value={moduleConfig.nSeries}
-  //                 onChange={handleModuleConfigChange}
-  //                 placeholder="Ex: 2"
-  //                 min="1"
-  //               />
-  //             </div>
-  //             <div className={style.parameter_card}>
-  //               <label>n_parallel – Módulos em paralelo</label>
-  //               <input
-  //                 type="number"
-  //                 name="nParallel"
-  //                 value={moduleConfig.nParallel}
-  //                 onChange={handleModuleConfigChange}
-  //                 placeholder="Ex: 3"
-  //                 min="1"
-  //               />
-  //             </div>
-  //           </div>
-  //         </div>
-
-  //         <button type="submit" className={style.calculate_button}>
-  //           Calcular Curva Característica
-  //         </button>
-  //       </div>
-  //     </form>
-
-  //     <hr className={style.section_divider} />
-
-  //     {/* Seção de Saídas */}
-  //     <div className={style.section}>
-  //       <h2 className={style.section_title}>Saídas</h2>
-        
-  //       {/* Parâmetros extraídos */}
-  //       <div className={style.subsection}>
-  //         <h3 className={style.subsection_title}>Parâmetros extraídos</h3>
-  //         <div className={style.grid_container}>
-  //           <div className={style.result_card}>
-  //             <span>Rs – Resistência série (Ω)</span>
-  //             <strong>{results.rs ?? '-'}</strong>
-  //           </div>
-  //           <div className={style.result_card}>
-  //             <span>Rsh – Resistência shunt (Ω)</span>
-  //             <strong>{results.rsh ?? '-'}</strong>
-  //           </div>
-  //           <div className={style.result_card}>
-  //             <span>A – Fator de idealidade</span>
-  //             <strong>{results.a ?? '-'}</strong>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <hr className={style.subsection_divider} />
-
-  //       {/* Correntes-base */}
-  //       <div className={style.subsection}>
-  //         <h3 className={style.subsection_title}>Correntes-base</h3>
-  //         <div className={style.grid_container}>
-  //           <div className={style.result_card}>
-  //             <span>Io – Corrente de saturação (A)</span>
-  //             <strong>{results.io ? results.io.toExponential(2) : '-'}</strong>
-  //           </div>
-  //           <div className={style.result_card}>
-  //             <span>Iph – Corrente foto-gerada (A)</span>
-  //             <strong>{results.iph ?? '-'}</strong>
-  //           </div>
-  //           <div className={style.result_card}>
-  //             <span>Vt – Tensão térmica (V)</span>
-  //             <strong>{results.vt ?? '-'}</strong>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <hr className={style.subsection_divider} />
-
-  //       {/* Ponto de Máxima Potência */}
-  //       <div className={style.subsection}>
-  //         <h3 className={style.subsection_title}>Ponto de Máxima Potência (MPP)</h3>
-  //         <div className={style.grid_container}>
-  //           <div className={style.result_card}>
-  //             <span>V_mpp – Tensão (V)</span>
-  //             <strong>{results.vMpp ?? '-'}</strong>
-  //           </div>
-  //           <div className={style.result_card}>
-  //             <span>I_mpp – Corrente (A)</span>
-  //             <strong>{results.iMpp ?? '-'}</strong>
-  //           </div>
-  //           <div className={style.result_card}>
-  //             <span>P_mpp – Potência (W)</span>
-  //             <strong>{results.pMpp ?? '-'}</strong>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <hr className={style.subsection_divider} />
-
-  //       {/* Gráficos (serão implementados posteriormente) */}
-  //       <div className={style.subsection}>
-  //         <h3 className={style.subsection_title}>Gráficos</h3>
-  //         <div className={style.plot_container}>
-  //           <div className={style.plot_placeholder}>
-  //             <p>Curva IV será exibida aqui</p>
-  //             {/* Substituir pelo componente Plot real */}
-  //           </div>
-  //           <div className={style.plot_placeholder}>
-  //             <p>Curva PV será exibida aqui</p>
-  //             {/* Substituir pelo componente Plot real */}
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );

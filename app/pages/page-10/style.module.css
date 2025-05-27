@@ -1,29 +1,231 @@
 .main_container {
-  /* background-color: #34eb5b; */
   display: flex;
-  /* justify-content: center; */
-  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fafafa; /* --color-background */
 }
 
-.sub_container {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: flex-start; */
-  /* align-items: flex-start; */
-  background-color: aqua;
-  background-color: white; 
-  background-color: #f9f9f9;
+.section {
+  width: 100%;
+  background-color: #ffffff; /* --color-6 */
   padding: 2rem;
-  width: 65%;
-  margin-top: 6rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.section_title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50; /* --color-7 */
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #8884d8; /* --color-1 */
+}
+
+.section_divider {
+  height: 1px;
+  margin: 2rem 0;
+  border: none;
+  background-color: #e0dede; /* --color-9 */
+}
+
+.subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.subsection_title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2c3e50; /* --color-7 */
+  margin-bottom: 0.5rem;
+}
+
+.subsection_divider {
+  height: 1px;
+  margin: 1.5rem 0;
+  border: none;
+  background-color: #e0dede; /* --color-9 */
+  opacity: 0.5;
+}
+
+.grid_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.parameter_card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.parameter_card label {
+  font-size: 0.9rem;
+  color: #2c3e50; /* --color-text */
+  font-weight: 500;
+}
+
+.parameter_card input {
+  padding: 0.75rem;
+  border: 1px solid #e0dede; /* --color-9 */
+  border-radius: 6px;
+  background-color: #ffffff; /* --color-6 */
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.parameter_card input:focus {
+  outline: none;
+  border-color: #8884d8; /* --color-1 */
+  box-shadow: 0 0 0 2px rgba(136, 132, 216, 0.2);
+}
+
+.result_card {
+  background-color: #f8f9fa; /* --color-5 */
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.result_card span {
+  font-size: 0.9rem;
+  color: #2c3e50; /* --color-text */
+  opacity: 0.8;
+}
+
+.result_card strong {
+  font-size: 1.1rem;
+  color: #8884d8; /* --color-1 */
 }
 
 .plot_container {
-  background-color: aquamarine;
-  width: 50%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
 }
 
-.data_container {
-  background-color: aqua;
-  width: 50%;
+.calculate_button {
+  padding: 0.75rem 1.5rem;
+  background-color: #8884d8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-end;
+  margin-top: 1rem;
+}
+
+.calculate_button:hover {
+  background-color: #6a66b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .main_container {
+    padding: 1rem;
+  }
+  
+  .section {
+    padding: 1.5rem;
+  }
+  
+  .grid_container {
+    grid-template-columns: 1fr;
+  }
+  
+  .plot_container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.model_card {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e0dede;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.model_card:hover {
+  border-color: #8884d8;
+  box-shadow: 0 2px 8px rgba(136, 132, 216, 0.2);
+}
+
+.model_card h3 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.model_card p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.model_card_selected {
+  border: 2px solid #8884d8;
+  background-color: #f0effa;
+}
+
+.error_message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.model_card {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e0dede;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.model_card:hover {
+  border-color: #8884d8;
+  box-shadow: 0 2px 8px rgba(136, 132, 216, 0.2);
+}
+
+.model_card h3 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.model_card p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.model_card_selected {
+  border: 2px solid #8884d8;
+  background-color: #f0effa;
+}
+
+.calculate_button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
