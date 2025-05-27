@@ -18,8 +18,8 @@ type PvResult = {
   Rs: number;
   Rsh: number;
   A: number;
-  iterations: number;
-  success: boolean;
+  iterations?: number;
+  success?: boolean;
   error?: string;
 };
 
@@ -145,12 +145,12 @@ export default function Page3() {
         Imp: parseFloat(form.Imp),
         Vmp: parseFloat(form.Vmp),
         Ns: parseFloat(form.Ns),
-        Tstc: parseFloat(form.Tstc) + 273.15, // Converte para Kelvin
-        ki: parseFloat(form.ki),
-        kv: parseFloat(form.kv)
+        // Tstc: parseFloat(form.Tstc) + 273.15, // Converte para Kelvin
+        // ki: parseFloat(form.ki),
+        // kv: parseFloat(form.kv)
       };
 
-      const res = await fetch('/api/run-python', {
+      const res = await fetch('https://python-vercel-l91boflpu-marlosbalbinos-projects.vercel.app/extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(numericForm)
@@ -158,16 +158,15 @@ export default function Page3() {
 
       const data: PvResult = await res.json();
 
-      if (data.success) {
+      if (res.ok) {
         setResult(data);
       } else {
-        setErrorMsg(data.error || 'Erro desconhecido');
+        setErrorMsg('Erro desconhecido');
       }
     } catch (err) {
       setErrorMsg('Erro ao chamar a API.');
       console.error('API Error:', err);
     }
-
     setLoading(false);
   };
 
@@ -268,13 +267,15 @@ export default function Page3() {
               {result ? <strong>{result.A.toFixed(4)} Ω</strong> : <strong>-</strong> }      
             </div>
           </div>
-          {result ? result.iterations && (
-            <div className={style.iteration_count}>
-              <strong>Iterações:</strong> {result.iterations}
-            </div>
-          ) : <></>}
+          
         </div>
       )}
     </div>
   );
 }
+
+// {result ? result.iterations && (
+//   <div className={style.iteration_count}>
+//     <strong>Iterações:</strong> {result.iterations}
+//   </div>
+// ) : <></>}
