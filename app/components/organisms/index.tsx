@@ -1,5 +1,6 @@
 export { default as DimensionForm } from './dim-form'
 export { default as Plot } from './plot'
+export { default as PlotData } from './plot-data'
 export { default as Results } from './results'
 export { default as IrradChart } from './irrad-chart'
 export { default as CanvasPlot } from './canvas-plot'
