@@ -1,12 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getCachedData } from '@/app/lib/dataCache';
 import { DataPoint } from '@/app/types/DataPoint';
 
-export async function GET(
-  request: Request, // Aqui usamos o tipo padrão
-  { params }: { params: { date: string } } // Correção aqui
-) {
-  const { date } = params; // formato esperado: YYYY-MM-DD
+export async function GET(req: NextRequest) {
+  // Extrair o parâmetro "date" da URL
+  const url = new URL(req.url);
+  const pathname = url.pathname; // /api/data/2020-02-01
+  const date = pathname.split('/').pop(); // "2020-02-01"
+
+  if (!date) {
+    return NextResponse.json({ error: 'Parâmetro de data inválido' }, { status: 400 });
+  }
+
   const allData = getCachedData();
 
   const irradiancia: DataPoint[] = [];
@@ -14,7 +19,7 @@ export async function GET(
 
   for (const row of allData) {
     if (!row.TIMESTAMP.startsWith(date)) {
-      if (irradiancia.length > 0) break; // Já passou do dia procurado
+      if (irradiancia.length > 0) break;
       continue;
     }
 
