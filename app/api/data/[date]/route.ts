@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getCachedData } from '@/app/lib/dataCache';
 import { DataPoint } from '@/app/types/DataPoint';
 
 export async function GET(
-  req: NextRequest,
-  context: { params: { date: string } }
+  request: Request, // Aqui usamos o tipo padrão
+  { params }: { params: { date: string } } // Correção aqui
 ) {
-  const { date } = context.params; // formato esperado: YYYY-MM-DD
+  const { date } = params; // formato esperado: YYYY-MM-DD
   const allData = getCachedData();
 
   const irradiancia: DataPoint[] = [];
