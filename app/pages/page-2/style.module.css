@@ -116,10 +116,13 @@
 
 /* Contêiner dos gráficos */
 .plot_container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5rem;
+  /* background-color: #6a66b8; */
+  /* margin-top: 1rem; */
 }
 
 @media (min-width: 992px) {
@@ -131,7 +134,7 @@
 .plot_wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  /* gap: 1rem; */
 }
 
 .plot_title {
@@ -189,4 +192,31 @@
   outline: none;
   border-color: #8884d8;
   box-shadow: 0 0 0 2px rgba(136, 132, 216, 0.2);
+}
+
+.subsection_title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2c3e50;
+  /* margin-bottom: 0.5rem; */
+}
+
+.result_label_level1 {
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.result_label_level2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.subsection_divider {
+  height: 1px;
+  margin: 1rem 0;
+  border: none;
+  background-color: #e0dede; /* --color-9 */
+  opacity: 0.5;
 }

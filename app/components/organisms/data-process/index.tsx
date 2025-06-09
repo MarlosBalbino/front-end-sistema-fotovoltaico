@@ -155,6 +155,7 @@ export default function DataProcessing({ update }: { update: boolean }) {
           
           <div className={style.locations_grid}>
             {estacoes.map((estacao, idx) => (
+              
               <div
                 key={idx}
                 className={`${style.estacao_card} ${selecionada?.nome === estacao.nome ? style.selected : ''}`}

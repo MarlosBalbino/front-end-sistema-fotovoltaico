@@ -1,0 +1,125 @@
+/* Container principal */
+.main_container {
+  width: 100%;
+  background-color: white;
+}
+
+/* Estilos para o select */
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.select {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.75rem;
+  border: 1px solid #e0dede;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  transition: all 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #8884d8;
+  box-shadow: 0 0 0 2px rgba(136, 132, 216, 0.2);
+}
+
+/* Estilos para a tabela */
+.table_container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  border: 1px solid #e0dede;
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table_header {
+  padding: 0.75rem;
+  text-align: left;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 500;
+  border-bottom: 2px solid #e0dede;
+}
+
+.checkbox_header {
+  padding: 0.75rem;
+  text-align: center;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 500;
+  border-bottom: 2px solid #e0dede;
+  width: 50px;
+}
+
+.table_cell {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.checkbox_cell {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #8884d8;
+  cursor: pointer;
+}
+
+/* Linha selecionada */
+.selected_row {
+  background-color: #f0f7ff;
+}
+
+/* Efeito hover */
+.table tr:hover td {
+  background-color: #f5f5f5;
+}
+
+.table tr.selected_row:hover td {
+  background-color: #e6f0ff;
+}
+
+/* Container do gráfico */
+.chart_container {
+  width: 100%;
+  padding: 1.5rem;
+  background-color: white;
+  border: 1px solid #e0dede;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .main_container {
+    padding: 1rem;
+  }
+  
+  .content_container {
+    padding: 1.5rem;
+  }
+  
+  .table_header, 
+  .table_cell {
+    padding: 0.5rem;
+  }
+}

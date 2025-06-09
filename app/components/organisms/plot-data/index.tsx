@@ -21,7 +21,7 @@ interface PlotProps {
   xLabel?: string;
   yLabel?: string;
   color?: string;
-  onPointClick?: (yValue: number) => void;
+  onPointClick?: ({xValue, yValue}: {xValue: string, yValue: number}) => void;
 }
 
 const PlotData = ({ data, xLabel = 'eixo x', yLabel = 'eixo y', color = '#8884d8', onPointClick }: PlotProps) => {
@@ -50,7 +50,7 @@ const PlotData = ({ data, xLabel = 'eixo x', yLabel = 'eixo y', color = '#8884d8
     if (!event?.activePayload?.length) return;
     const point: DataPoint = event.activePayload[0].payload;
     setSelectedPoint(point);
-    onPointClick?.(point.y);
+    onPointClick?.({xValue: point.x, yValue: point.y});
   };
 
   const applyZoom = (direction: 'in' | 'out') => {
@@ -152,7 +152,7 @@ const PlotData = ({ data, xLabel = 'eixo x', yLabel = 'eixo y', color = '#8884d8
                   x={selectedPoint.x}
                   y={selectedPoint.y}
                   r={6}
-                  fill="#8884d8"
+                  fill={color}
                   stroke="white"
                   strokeWidth={2}
                   isFront

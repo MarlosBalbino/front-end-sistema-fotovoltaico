@@ -1,0 +1,296 @@
+/* Estilos gerais da página */
+.main_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fafafa;
+ 
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.section_title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  /* margin-bottom: 1.5rem; */
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #8884d8;
+}
+
+.section_divider {
+  height: 1px;
+  margin: 2rem 0;
+  border: none;
+  background-color: #e0dede;
+}
+
+.subsection {
+  display: flex;
+  flex-direction: column;
+}
+
+.subsection_title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2c3e50;
+  /* margin-bottom: 0.5rem; */
+}
+
+/* Checkbox para seleção de modelo */
+.checkbox_container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox_input {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  accent-color: #8884d8;
+  cursor: pointer;
+}
+
+.checkbox_label {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Seletor de modelos */
+.model_select_container {
+  margin-bottom: 1.5rem;
+}
+
+.select_label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.model_select {
+  
+  /* width: 100%; */
+  max-width: 300px;
+  padding: 0.75rem;
+  border: 1px solid #e0dede;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.model_select:focus {
+  outline: none;
+  border-color: #8884d8;
+  box-shadow: 0 0 0 2px rgba(136, 132, 216, 0.2);
+}
+
+/* Grid de parâmetros */
+.parameters_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.parameter_card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.parameter_card label {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.parameter_input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e0dede;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.parameter_input:focus {
+  outline: none;
+  border-color: #8884d8;
+  box-shadow: 0 0 0 2px rgba(136, 132, 216, 0.2);
+}
+
+.parameter_input:disabled {
+  background-color: #f5f5f5;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.parameter_input::placeholder {
+  color: #aaa;
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+.input_error {
+  border: 1px solid red;
+  /* background-color: #ffe6e6; */
+}
+
+/* Botão de cálculo */
+.calculate_button {
+  padding: 0.75rem 1.5rem;
+  background-color: #8884d8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  max-width: 300px;
+}
+
+.calculate_button:hover {
+  background-color: #6a66b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calculate_button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Seção de resultados */
+.results_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  /* margin-top: 1rem; */
+}
+
+.results_graph {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.result_card {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  /* gap: 0.25rem; */
+}
+
+.result_card span {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  opacity: 0.8;
+}
+
+.result_card strong {
+  font-size: 1.1rem;
+  color: #8884d8;
+}
+
+.iteration_count {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Mensagens de erro */
+.error_message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 6px;
+  border-left: 4px solid #d32f2f;
+  font-size: 0.9rem;
+}
+
+/* Placeholders para gráficos (serão substituídos) */
+.plot_placeholder {
+  height: 300px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8884d8;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .main_container {
+    padding: 1rem;
+  }
+  
+  .section {
+    padding: 1.5rem;
+  }
+  
+  .parameters_grid,
+  .results_grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .calculate_button {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .subsection_title {
+    font-size: 1.1rem;
+  }
+  
+  .parameter_input,
+  .model_select {
+    padding: 0.65rem;
+  }
+}
+
+.subsection_divider {
+  height: 1px;
+  margin: 1rem 0;
+  border: none;
+  background-color: #e0dede; /* --color-9 */
+  opacity: 0.5;
+}

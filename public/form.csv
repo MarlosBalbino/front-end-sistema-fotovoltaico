@@ -1,2 +1,2 @@
-localidade,latitude,longitude,consumo,perfil,inclinação,orientação,modelo
-São Paulo,na,na,300,monofasico,25,norte,Modelo A
+consumo,perfil,inclinacao,orientacao,modelo,tarifa_de_energia,tarifa_da_bandeira,custo_por_painel,custo_por_inversor,custo_mao_de_obra,inflacao_de_energia,anos_de_analise,depreciacao_anual,taxa_do_fio_b,inflacao_anual,Isc,Voc,Imp,Vmp,Ns,ki,kv, area, eficiencia
+300,trifasico,10,N,CANADIAN-HiKu7,0.86293,0,1000,5000,5000,5.3,25,0.5,0.22,5,18.42,41.1,17.15,34.7,120,0.00050,-0.00260, 3.106, 0.216

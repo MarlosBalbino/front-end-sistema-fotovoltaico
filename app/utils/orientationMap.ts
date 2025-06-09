@@ -1,0 +1,18 @@
+export const orientationMap: Record<string, { angle: number; label: string }> = {
+  N: { angle: 0, label: "Norte (N)" },
+  NNE: { angle: 22.5, label: "Nor-Nordeste (NNE)" },
+  NE: { angle: 45, label: "Nordeste (NE)" },
+  ENE: { angle: 67.5, label: "Lés-Nordeste (ENE)" },
+  E: { angle: 90, label: "Leste (E)" },
+  ESE: { angle: 112.5, label: "Lés-Sudeste (ESE)" },
+  SE: { angle: 135, label: "Sudeste (SE)" },
+  SSE: { angle: 157.5, label: "Sul-Sudeste (SSE)" },
+  S: { angle: 180, label: "Sul (S)" },
+  SSW: { angle: 202.5, label: "Sul-Sudoeste (SSW)" },
+  SW: { angle: 225, label: "Sudoeste (SW)" },
+  WSW: { angle: 247.5, label: "Oés-Sudoeste (WSW)" },
+  W: { angle: 270, label: "Oeste (W)" },
+  WNW: { angle: 292.5, label: "Oés-Noroeste (WNW)" },
+  NW: { angle: 315, label: "Noroeste (NW)" },
+  NNW: { angle: 337.5, label: "Nor-Noroeste (NNW)" },
+};

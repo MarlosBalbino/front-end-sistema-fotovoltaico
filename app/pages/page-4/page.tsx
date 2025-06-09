@@ -147,7 +147,7 @@ export default function Page4() {
       <h2 className={style.section_title}>Parâmetros da Rede Elétrica</h2>
       <div className={style.plot_grid}>
         <RechartsPlot
-          x={t}
+          x={[t, t]}
           y={[v, i]}
           labels={['Tensão', 'Corrente']}
           lineWidths={[1, 1]}
@@ -161,7 +161,7 @@ export default function Page4() {
           xPrecision={3}
         />
         <RechartsPlot
-          x={t}
+          x={[t]}
           y={[p]}
           labels={['Potência', 'Potência ativa', 'Potência reativa']}
           lineWidths={[1]}
@@ -175,7 +175,7 @@ export default function Page4() {
           xPrecision={3}
         />
         <RechartsPlot
-          x={t}
+          x={[t, t]}
           y={[pa, pr]}
           labels={['Potência ativa', 'Potência reativa']}
           lineWidths={[1, 1]}
@@ -194,7 +194,7 @@ export default function Page4() {
       <h2 className={style.section_title}>Parâmetros de Entrada (Inversor)</h2>
       <div className={style.plot_grid}>
         <RechartsPlot
-          x={t}
+          x={[t, t]}
           y={[vf, i_f]}
           labels={['Tensão', 'Corrente']}
           lineWidths={[1, 1]}
@@ -208,7 +208,7 @@ export default function Page4() {
           xPrecision={3}
         />
         <RechartsPlot
-          x={t}
+          x={[t]}
           y={[pf]}
           labels={['Potência']}
           lineWidths={[1]}
@@ -222,7 +222,7 @@ export default function Page4() {
           xPrecision={3}
         />
         <RechartsPlot 
-          x={t}
+          x={[t, t]}
           y={[paf, prf]}
           labels={['Potência ativa', 'Potência reativa']}
           lineWidths={[1, 1]}

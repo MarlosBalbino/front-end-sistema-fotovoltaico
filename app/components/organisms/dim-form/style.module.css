@@ -2,13 +2,13 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  /* gap: 2rem; */
 }
 
 .sub_container {
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
-  gap: 2rem;
+  gap: 1rem;
   align-items: flex-start;
 }
 
@@ -19,6 +19,9 @@
 }
 
 .form_section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -160,4 +163,26 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+.parameter_card {
+  /* background-color: #6a66b8; */
+  display: flex;
+  /* flex: 1; */
+  flex-direction: column;
+  /* gap: 0.5rem; */
+}
+
+.parameter_card label {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 500;
+
+  
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 500;
 }

@@ -12,7 +12,7 @@ let cachedData: RawData[] | null = null;
 export function getCachedData(): RawData[] {
   if (cachedData) return cachedData;
 
-  const filePath = path.join(process.cwd(), 'data', 'dados_ano_2020', 'dados_tratados_2020.csv');
+  const filePath = path.join(process.cwd(), 'data', 'dados_ano_2020', 'dados_valores_removidos_2020.csv');
   const fileContent = fs.readFileSync(filePath, 'utf-8');
 
   const records = parse(fileContent, {

@@ -3,31 +3,39 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-
 type DataPoint = {
   mes: string;
   [key: string]: number | string;
 };
 
-interface DualLineChartProps {
+interface MultiLineChartProps {
   irradiancias: DataPoint[];
   labels: string[];
   colors?: string[];
+  yLabel?: string;
+  yUnit?: string;
+  ylim?: [number, number]; // <- novo
 }
 
 const DEFAULT_COLORS = ['#8884d8', '#82ca9d', '#ff7300', '#ff0000', '#00ff00', '#0000ff'];
 
-const IrradChart: React.FC<DualLineChartProps> = ({ 
+const IrradChart: React.FC<MultiLineChartProps> = ({ 
   irradiancias, 
   labels,
-  colors = DEFAULT_COLORS 
+  yLabel = "Eixo Y",
+  yUnit = "",
+  colors = DEFAULT_COLORS,
+  ylim
 }) => {
   const curveKeys = irradiancias.length > 0 
     ? Object.keys(irradiancias[0]).filter(key => key !== 'mes') 
     : [];
 
+  const height = 250;
+  const width = height * 23 / 9;
+
   return (
-    <div style={{ width: '100%', height: 400 }}>
+    <div style={{ width: width, height: height }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={irradiancias}
@@ -39,19 +47,19 @@ const IrradChart: React.FC<DualLineChartProps> = ({
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="mes" 
-            // label={{ value: 'Mês', position: 'insideBottomCenter', offset: -5 }} 
-          />
+          <XAxis dataKey="mes" />
           <YAxis 
             label={{ 
-              value: 'Irradiância (W/m²)', 
+              value: `${yLabel} ${yUnit ? `(${yUnit})`: ""}`, 
+              position: 'insideCenter',
               angle: -90, 
-              position: 'insideLeft' 
+              offset: 20,
+              dx: -40               
             }} 
+            domain={ylim ?? ['auto', 'auto']} // <- aqui está o suporte a ylim
           />
           <Tooltip 
-            formatter={(value) => [`${value} W/m²`, '']}
+            formatter={(value) => [`${value} ${yUnit}`, '']}
             labelFormatter={(label) => `Mês: ${label}`}
           />
           <Legend />

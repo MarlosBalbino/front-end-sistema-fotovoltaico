@@ -1,4 +1,6 @@
 // app/api/run-python/route.ts
+//Obs: NÃO FUNCIONA NO VERCEL
+
 import { NextResponse } from 'next/server';
 import { spawnSync } from 'child_process';
 

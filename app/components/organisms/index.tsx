@@ -4,10 +4,17 @@ export { default as PlotData } from './plot-data'
 export { default as Results } from './results'
 export { default as IrradChart } from './irrad-chart'
 export { default as CanvasPlot } from './canvas-plot'
-export { default as RechartsPlot } from './recharts-plot'
+
 export { default as DataProcessing } from './data-process'
 export { default as PanelInfo } from './panel-info'
 export { default as Payback } from './payback'
 export { default as Intro } from './intro'
 export { default as TimePlot } from './time-plot'
 export { default as FunctionPlot } from './function-plot'
+export { default as CompareGraphs } from './compare-graphs'
+
+export { default as RechartsPlot } from './recharts-plot'
+export { default as ShowRechartsPlots } from './show-recharts-plots'
+
+export { default as ControlSolution } from './control-solution'
+export { default as PaybackComponent} from './payback-component'

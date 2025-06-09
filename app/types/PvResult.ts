@@ -1,0 +1,24 @@
+export type PvResult = {
+  Rs: number;
+  Rsh: number;
+  A: number;
+  I0: number;
+  Iph: number;
+  Vt: number;
+  time: number; 
+  Vs: number[];
+  Is: number[];
+  Ps: number[];
+  V_mpp: number;
+  I_mpp: number;
+  P_mpp: number;
+  Vs_stc: number[];
+  Is_stc: number[];
+  Ps_stc: number[];
+  V_mpp_stc: number;
+  I_mpp_stc: number;
+  P_mpp_stc: number;
+  iterations?: number;
+  success?: boolean;
+  error?: string;
+};
