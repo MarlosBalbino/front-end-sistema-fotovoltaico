@@ -20,10 +20,10 @@ export default function NavBar(){
         <div className={style.nav_buttons}>
           <div className={style.main_buttons}>
             <LinkItem link={'/pages/home'} label={'INÍCIO'}/>
-            <LinkItem link={'/pages/page-1'} label={'DIMENSIONAMENTO'}/>
-            <LinkItem link={'/pages/page-2'} label={'SIMULAÇÃO'}/>
+            <LinkItem link={'/pages/page-1'} label={'SIMULAÇÃO'}/>
+            <LinkItem link={'/pages/page-2'} label={'DIMENSIONAMENTO'}/>
             <LinkItem link={'/pages/page-3'} label={'CURVA CARACTERÍSTICA'}/>
-            <LinkItem link={'/pages/page-4'} label={'PARÂMETROS'}/>
+            <LinkItem link={'/pages/page-4'} label={'SOLUÇÃO DE CONTROLE'}/>
           </div>
           
           <div className={style.secnd_buttons}>

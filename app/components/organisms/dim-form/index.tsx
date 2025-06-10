@@ -4,6 +4,8 @@ import style from "./style.module.css";
 import Link from "next/link";
 import { FormData } from "@/app/types/FormData";
 
+import { InfoTooltip } from "@molecules";
+
 import { orientationMap } from "@/app/utils/orientationMap";
 
 const inputLabels = {
@@ -80,6 +82,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
   });
 
   const [csvData, setCsvData] = useState<string[][]>([]);
+  const [importFile, setImportFile] = useState(false)
   
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -154,7 +157,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
 
   return (
     <form onSubmit={handleSubmit} className={style.form_container}>
-      <div className={style.form_group}>
+      {/* <div className={style.form_group}>
         <label className={style.label}>
           <input
             className={style.input_box}
@@ -164,11 +167,12 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
           />
           Preencher dados manualmente
         </label>
-      </div>
+      </div> */}
 
       <div className={style.sub_container}>
         <div>   
-          <fieldset className={style.form_section} disabled={!formData.useDefaultData}>
+          <fieldset className={style.form_section}>
+            {/* <fieldset className={style.form_section} disabled={!formData.useDefaultData}> */}
             <legend className={style.legend}>Dados da residência</legend>
             
             <div className={style.parameter_card}>
@@ -200,7 +204,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
             </div>
           </fieldset>
 
-          <fieldset className={style.form_section} disabled={!formData.useDefaultData}>
+          <fieldset className={style.form_section}>
             <legend className={style.legend}>Dados dos painéis</legend>
 
             <div className={style.parameter_card}>
@@ -385,34 +389,34 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
 
         <div className={style.vertical_line}></div>
 
-        <fieldset className={style.form_section} disabled={!formData.useDefaultData}>
+        <fieldset className={style.form_section}>
           <legend className={style.legend}>Dados do Payback</legend>
 
           {Object.entries({
-  tarifa_de_energia: "0.86293",
-  tarifa_da_bandeira: "0",
-  custo_por_painel: "1000",
-  custo_por_inversor: "5000",
-  custo_mao_de_obra: "5000",
-  inflacao_de_energia: "5.3",
-  anos_de_analise: "25",
-  depreciacao_anual: "0.5",
-  taxa_do_fio_b: "0.22",
-  inflacao_anual: "5"
-}).map(([field, defaultValue], idx) => (
-  <div key={idx} className={style.parameter_card}>
-    <label htmlFor={field}>{(inputLabels as any)[field]}</label>
-    <input
-      id={field}
-      className={style.input}
-      type="number"
-      name={field}
-      value={(formData as any)[field] || ""}
-      onChange={handleChange}
-      placeholder={defaultValue}
-    />
-  </div>
-))}
+            tarifa_de_energia: "0.86293",
+            tarifa_da_bandeira: "0",
+            custo_por_painel: "1000",
+            custo_por_inversor: "5000",
+            custo_mao_de_obra: "5000",
+            inflacao_de_energia: "5.3",
+            anos_de_analise: "25",
+            depreciacao_anual: "0.5",
+            taxa_do_fio_b: "0.22",
+            inflacao_anual: "5"
+          }).map(([field, defaultValue], idx) => (
+            <div key={idx} className={style.parameter_card}>
+              <label htmlFor={field}>{(inputLabels as any)[field]}</label>
+              <input
+                id={field}
+                className={style.input}
+                type="number"
+                name={field}
+                value={(formData as any)[field] || ""}
+                onChange={handleChange}
+                placeholder={defaultValue}
+              />
+            </div>
+          ))}
 
         </fieldset>
 
@@ -422,23 +426,28 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <input
                 className={style.input_box}
                 type="checkbox"
-                checked={formData.importFile}
-                onChange={() => handleExclusiveCheck("importFile")}
+                // checked={formData.importFile}
+                // onChange={() => handleExclusiveCheck("importFile")}
+                onChange={() => setImportFile(!importFile)}
               />
               Importar arquivo CSV
+              <InfoTooltip iconSize={15} text={`Preencha automaticamente o formulário importando um arquivo .csv com todas as informações.
+                \nDica: com a caixa marcada à esquerda, clique no link abaixo para verificar o formato especificado, crie uma cópia da tabela no google sheets, edite os parametros como quiser, baixe e importe.`}/>
             </label>
+            
           </div>
 
           <input
             className={style.input_file}
             type="file"
             name="fileName"
-            disabled={!formData.importFile}
+            disabled={!importFile}
             onChange={handleFileChange}
             accept=".csv"
           />
 
-          {formData.importFile && (          
+          {/* Essa parte será mostrada caso a check box esteja "checada" */}
+          {importFile ? (          
             <div className={style.file_info}>
               <p className={style.attention}>
                 Atenção! O arquivo CSV deve seguir o formato especificado                   
@@ -456,7 +465,8 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
                 <span>Baixar modelo de formulário</span>
               </Link>
             </div>
-          )}  
+          ) : <></>}  
+          
         </div>
       </div>
 
