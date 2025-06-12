@@ -2,18 +2,13 @@
 
 .main_container {
   /* background-color: aqua; */
-  /* width: 500px; */
+  max-width: 500px;
   height: 100px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-}
-
-.label {
-  font-size: 14pt;
-
+  gap: 1rem;
 }
 
 .perfil {
@@ -24,10 +19,14 @@
   aspect-ratio: 1;
   /* padding: 0.3em; */
   overflow: hidden;
+  /* background-color: aquamarine; */
 }
 
 .img {
   z-index: -1;
   height: 100%;
+}
 
+.ul li {
+  font-size: 0.90rem;
 }

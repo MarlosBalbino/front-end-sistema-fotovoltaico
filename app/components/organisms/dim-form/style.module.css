@@ -39,7 +39,7 @@
 .form_group {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
@@ -139,6 +139,13 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.submit_button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .submit_button:active {
   transform: translateY(0);
 }
@@ -187,4 +194,19 @@
   font-size: 0.9rem;
   color: #2c3e50;
   font-weight: 500;
+}
+
+.error_message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 6px;
+  border-left: 4px solid #d32f2f;
+  font-size: 0.9rem;
+}
+
+.input_error {
+  border: 1px solid red;
+  /* background-color: #ffe6e6; */
 }

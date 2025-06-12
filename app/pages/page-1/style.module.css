@@ -19,12 +19,16 @@
 }
 
 .section_title {
-  font-size: 1.5rem;
+  width: 100%;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #2c3e50;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #8884d8;
+  display: flex;
+  align-items: first baseline;
+  gap: 0.5rem;
 }
 
 /* Contêiner de entrada */
@@ -207,6 +211,12 @@
   font-weight: 500;
 }
 
+.span_label {
+  font-size: 1rem;
+  color: red;
+  font-weight: 500;
+}
+
 .result_label_level2 {
   font-size: 2rem;
   color: #2c3e50;
@@ -278,12 +288,15 @@
   width: 16px;
   height: 16px;
   accent-color: #8884d8;
+  
 }
 
-.show_div {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: center; */
-  align-items: first baseline;
-  gap: 1rem;
+.error_message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 6px;
+  border-left: 4px solid #d32f2f;
+  font-size: 0.9rem;
 }

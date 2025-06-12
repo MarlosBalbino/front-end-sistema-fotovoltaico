@@ -4,6 +4,8 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
+import style from './style.module.css'
+
 type PaybackInput = {
   consumoMensal: number[];
   nPaineis: number;
@@ -180,22 +182,29 @@ export default function PaybackComponent({
 
   return (
     <div>
-      <h2>Simulação de Payback Fotovoltaico</h2>
-      <button onClick={handleCalculo}>Calcular Payback</button>
+      <button className={style.submit_button} onClick={handleCalculo}>Calcular Payback</button>
       {resultado && (
         <div style={{ marginTop: '1rem' }}>
-          <p><strong>Investimento Total:</strong> R$ {resultado.investimentoTotal.toFixed(2)}</p>
-          <p><strong>Economia Acumulada:</strong> R$ {resultado.economiaAcumulada.toFixed(2)}</p>
+          <div style={{ display: 'flex', flexDirection: "column" }}>
+            <label className={style.result_label_level1}>Investimento Total: R$ {resultado.investimentoTotal.toFixed(2)} </label>
+            <label className={style.result_label_level1}>Economia Acumulada: R$ {resultado.economiaAcumulada.toFixed(2)}</label>
+            <label className={style.result_label_level1}>Payback Real (meses): {resultado.paybackMeses ?? 'Não atingido'} </label>
+            <label className={style.result_label_level1}>Payback Simples (anos): {resultado.paybackSimples.toFixed(2)}</label>
+            <label className={style.result_label_level1}>Economia Anual: R$ {resultado.economiaAnual.toFixed(2)}</label>
+          </div>
+          
+
+          {/* <p><strong>Investimento Total:</strong> R$ {resultado.investimentoTotal.toFixed(2)}</p> */}
+          {/* <p><strong>Economia Acumulada:</strong> R$ {resultado.economiaAcumulada.toFixed(2)}</p>
           <p><strong>Payback Real (meses):</strong> {resultado.paybackMeses ?? 'Não atingido'}</p>
           <p><strong>Payback Simples (anos):</strong> {resultado.paybackSimples.toFixed(2)}</p>
-          <p><strong>Economia Anual:</strong> R$ {resultado.economiaAnual.toFixed(2)}</p>
+          <p><strong>Economia Anual:</strong> R$ {resultado.economiaAnual.toFixed(2)}</p> */}
 
-          <div >
+          <hr className={style.subsection_divider} />
 
-          
           <div style={{ display: 'flex', flexDirection:"column"}}>
-            <div style={{ flex: 1, minWidth: 300 }}>
-              <h3>Gráfico de Economia Acumulada (Mensal)</h3>
+            <div style={{ flex: 1, minWidth: 300 }}>              
+              <h3 className={style.subsection_title}>Gráfico de Economia Acumulada (Mensal)</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={resultado.economiaPorMes}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -203,13 +212,13 @@ export default function PaybackComponent({
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="economia" stroke="#82ca9d" name="Economia Acumulada (R$)" />
+                  <Line type="monotone" dataKey="economia" stroke="#82ca9d" name="Economia Mensal Acumulada (R$)" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
             <div style={{ flex: 1, minWidth: 300 }}>
-              <h3>Gráfico de Payback por Ano</h3>
+              <h3 className={style.subsection_title}>Gráfico de Payback por Ano</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={resultado.paybackPorAno}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -217,13 +226,12 @@ export default function PaybackComponent({
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="valorAcumulado" fill="#8884d8" name="Acumulado (R$)" />
+                  <Bar dataKey="valorAcumulado" fill="#8884d8" name="Economia Anual Acumulada (R$)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </div>        
         </div>
-      </div>
       )}
     </div>
   );

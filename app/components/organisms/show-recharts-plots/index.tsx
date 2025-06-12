@@ -15,8 +15,7 @@ type Props = {
 export default function ShowRechartsPlots ({result, climaticConditionsForm}: Props) {
 
   return (
-    <div>
-      <hr className={style.subsection_divider} />
+    <div>      
       <h3 className={style.subsection_title}>Curva característica</h3>
       <div className={style.results_graph}>
         <RechartsPlot

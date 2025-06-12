@@ -193,7 +193,7 @@ export default function ControlSolution({power = 0}: ControlSolutionProps) {
       </div>
 
       {/* Painel de Controle */}
-      <div className={style.panel}>
+      {/* <div className={style.panel}>
         {controlGroups.map(group => (
           <div key={group.label} className={style.control_group}>
             <h4 className={style.group_title}>{group.label}</h4>
@@ -227,6 +227,6 @@ export default function ControlSolution({power = 0}: ControlSolutionProps) {
             })}
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
 );}

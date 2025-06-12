@@ -69,7 +69,7 @@
 
 .h2 {
   color: #2c3e50;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
   border-bottom: 2px solid #8884d8;
@@ -78,21 +78,25 @@
 
 .alguma_coisa {
   width: 100%;
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 0 auto;
   padding: 2rem;
   background-color: #f8f9fa;
   border-radius: 8px;
-  text-align: center;
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.8;
   color: #555;
+  text-align: justify;     /* Alinha o texto como em artigos impressos */
+}
+
+.alguma_coisa p {
+  margin-bottom: 1.2rem;   /* Espaçamento vertical entre parágrafos */
 }
 
 .grid_container {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 1.5rem;
 }
@@ -167,4 +171,20 @@
     width: 100%;
     max-width: 200px;
   }
+}
+
+
+.verMais {
+  background: none;
+  border: none;
+  color: #0070f3;
+  font-size: 1rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.verMais:hover {
+  color: #0056b3;
 }

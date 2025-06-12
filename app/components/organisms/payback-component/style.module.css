@@ -1,3 +1,10 @@
+.subsection_title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2c3e50;
+  /* margin-bottom: 0.5rem; */
+}
+
 .submit_button {
   padding: 0.75rem 1.5rem;
   background-color: #8884d8;
@@ -10,4 +17,29 @@
   transition: all 0.2s;
   align-self: flex-end;
   margin-top: 1rem;
+}
+
+.submit_button:hover {
+  background-color: #6a66b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit_button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.submit_button:active {
+  transform: translateY(0);
+}
+
+.subsection_divider {
+  height: 1px;
+  margin: 1rem 0;
+  border: none;
+  background-color: #e0dede; /* --color-9 */
+  opacity: 0.5;
 }

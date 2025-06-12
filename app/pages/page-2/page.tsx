@@ -7,8 +7,9 @@ import style from './style.module.css'
 export default function Page1() {
   const [update, setUpdate] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (formData: any): Promise<string> => {
     setUpdate(prev => !prev); // força o useEffect no Results
+    return 'ok'
   };
 
   return (    

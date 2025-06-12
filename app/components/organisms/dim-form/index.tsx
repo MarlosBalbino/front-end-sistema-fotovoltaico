@@ -1,5 +1,5 @@
 "use client";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import style from "./style.module.css";
 import Link from "next/link";
 import { FormData } from "@/app/types/FormData";
@@ -48,7 +48,11 @@ const paybackPlaceHolders = {
     inflacao_anual: "5"
 }
 
-export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) => void }) {
+interface DimensionFormProps {
+  onSubmit: (formData: any) => Promise<string>,
+}
+
+export default function DimensionForm({ onSubmit }: DimensionFormProps) {
   const [formData, setFormData] = useState<FormData>({
     consumo: "",
     perfil: "monofasico",
@@ -83,6 +87,16 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
 
   const [csvData, setCsvData] = useState<string[][]>([]);
   const [importFile, setImportFile] = useState(false)
+
+  const requiredFields: string[] = [
+    'consumo', 'perfil', 'inclinacao', 'orientacao', 'isc', 'voc', 'imp', 'vmp', 'ns',
+    'ki', 'kv', 'tarifa_de_energia', 'custo_por_painel', 'custo_por_inversor', 'custo_mao_de_obra',
+    'anos_de_analise'
+  ];
+
+  const [inputErrors, setInputErrors] = useState<Record<string, boolean>>({});
+  const [errorMsg, setErrorMsg] = useState('');
+  // const [loading, setLoading] = useState(false);
   
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -150,36 +164,57 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
     reader.readAsText(file);
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSubmit(formData); // Retorna todos os dados do formulário para o componente pai
-  };
+
+  const [loading, setLoading] = useState(false)
+
+
+  const handleSubmit = async (e: FormEvent) => {
+  e.preventDefault();
+  
+  setLoading(true);
+  setErrorMsg('');
+
+  // Permite que o estado `loading` seja refletido antes de continuar
+  await new Promise(resolve => setTimeout(resolve, 0)); 
+
+  const errors: Record<string, boolean> = {};
+  for (const field of requiredFields) {
+    const value = field in formData ? formData[field as keyof FormData] : null;
+    if (!value || String(value).trim() === "") {
+      errors[field] = true;
+    }
+  }
+
+
+  if (Object.keys(errors).length > 0) {
+    setInputErrors(errors);
+    setErrorMsg("Campo obrigatório não preenchido");
+    setLoading(false);
+    return;
+  }
+
+  setInputErrors({});
+
+  const response = await onSubmit(formData); 
+
+  if (response === 'ok') {
+    setLoading(false);
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className={style.form_container}>
-      {/* <div className={style.form_group}>
-        <label className={style.label}>
-          <input
-            className={style.input_box}
-            type="checkbox"
-            checked={formData.useDefaultData}
-            onChange={() => handleExclusiveCheck("useDefaultData")}
-          />
-          Preencher dados manualmente
-        </label>
-      </div> */}
-
       <div className={style.sub_container}>
         <div>   
-          <fieldset className={style.form_section}>
-            {/* <fieldset className={style.form_section} disabled={!formData.useDefaultData}> */}
+          <fieldset className={style.form_section}>          
             <legend className={style.legend}>Dados da residência</legend>
             
             <div className={style.parameter_card}>
               <label htmlFor="consumo">{inputLabels.consumo}</label>
               <input
                 id="consumo"
-                className={style.input}
+                className={`${style.input} ${inputErrors["consumo"] ? style.input_error : ''}`}
                 type="number"
                 name="consumo"
                 value={formData.consumo}
@@ -192,7 +227,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="perfil">{inputLabels.perfil}</label>
               <select
                 id="perfil"
-                className={style.select}
+                className={`${style.select} ${inputErrors[""] ? style.input_error : ''}`}
                 name="perfil"
                 value={formData.perfil}
                 onChange={handleChange}
@@ -211,7 +246,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="inclinacao">{inputLabels.inclinacao}</label>
               <input
                 id="inclinacao"
-                className={style.input}
+                className={`${style.input} ${inputErrors["inclinacao"] ? style.input_error : ''}`}
                 type="number"
                 name="inclinacao"
                 value={formData.inclinacao}
@@ -221,18 +256,9 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
             </div>
 
             <div className={style.parameter_card}>
-              <label htmlFor="orientacao">{inputLabels.orientacao}</label>
-              {/* <input
-                id="orientacao"
-                className={style.input}
-                type="text"
-                name="orientacao"
-                value={formData.orientacao}
-                onChange={handleChange}
-                placeholder="Ex: Norte"
-              /> */}
+              <label htmlFor="orientacao">{inputLabels.orientacao}</label>              
               <select 
-                className={style.select} 
+                className={`${style.select} ${inputErrors["orientacao"] ? style.input_error : ''}`}
                 name="orientacao" 
                 id="orientacao" 
                 value={formData.orientacao}
@@ -251,7 +277,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="modelo">{inputLabels.modelo}</label>
               <input
                 id="modelo"
-                className={style.input}
+                className={`${style.input} ${inputErrors["modelo"] ? style.input_error : ''}`}
                 type="text"
                 name="modelo"
                 value={formData.modelo}
@@ -264,7 +290,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="isc">{inputLabels.isc}</label>
               <input
                 id="isc"
-                className={style.input}
+                className={`${style.input} ${inputErrors["isc"] ? style.input_error : ''}`}
                 type="number"
                 name="isc"
                 value={formData.isc}
@@ -278,7 +304,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="voc">{inputLabels.voc}</label>
               <input
                 id="voc"
-                className={style.input}
+                className={`${style.input} ${inputErrors["voc"] ? style.input_error : ''}`}
                 type="number"
                 name="voc"
                 value={formData.voc}
@@ -292,7 +318,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="imp">{inputLabels.imp}</label>
               <input
                 id="imp"
-                className={style.input}
+                className={`${style.input} ${inputErrors["imp"] ? style.input_error : ''}`}
                 type="number"
                 name="imp"
                 value={formData.imp}
@@ -306,7 +332,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="vmp">{inputLabels.vmp}</label>
               <input
                 id="vmp"
-                className={style.input}
+                className={`${style.input} ${inputErrors["vmp"] ? style.input_error : ''}`}
                 type="number"
                 name="vmp"
                 value={formData.vmp}
@@ -320,7 +346,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="ns">{inputLabels.ns}</label>
               <input
                 id="ns"
-                className={style.input}
+                className={`${style.input} ${inputErrors["ns"] ? style.input_error : ''}`}
                 type="number"
                 name="ns"
                 value={formData.ns}
@@ -333,7 +359,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="ki">{inputLabels.ki}</label>
               <input
                 id="ki"
-                className={style.input}
+                className={`${style.input} ${inputErrors["ki"] ? style.input_error : ''}`}
                 type="number"
                 name="ki"
                 value={formData.ki}
@@ -347,7 +373,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="kv">{inputLabels.kv}</label>
               <input
                 id="kv"
-                className={style.input}
+                className={`${style.input} ${inputErrors["kv"] ? style.input_error : ''}`}
                 type="number"
                 name="kv"
                 value={formData.kv}
@@ -361,7 +387,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="area">{inputLabels.area}</label>
               <input
                 id="area"
-                className={style.input}
+                className={`${style.input} ${inputErrors["area"] ? style.input_error : ''}`}
                 type="number"
                 name="area"
                 value={formData.area}
@@ -375,7 +401,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor="eficiencia">{inputLabels.eficiencia}</label>
               <input
                 id="eficiencia"
-                className={style.input}
+                className={`${style.input} ${inputErrors["eficiencia"] ? style.input_error : ''}`}
                 type="number"
                 name="eficiencia"
                 value={formData.eficiencia}
@@ -408,7 +434,7 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
               <label htmlFor={field}>{(inputLabels as any)[field]}</label>
               <input
                 id={field}
-                className={style.input}
+                className={`${style.input} ${inputErrors[field] ? style.input_error : ''}`}
                 type="number"
                 name={field}
                 value={(formData as any)[field] || ""}
@@ -425,16 +451,13 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
             <label className={style.label}>
               <input
                 className={style.input_box}
-                type="checkbox"
-                // checked={formData.importFile}
-                // onChange={() => handleExclusiveCheck("importFile")}
+                type="checkbox"                
                 onChange={() => setImportFile(!importFile)}
               />
               Importar arquivo CSV
               <InfoTooltip iconSize={15} text={`Preencha automaticamente o formulário importando um arquivo .csv com todas as informações.
                 \nDica: com a caixa marcada à esquerda, clique no link abaixo para verificar o formato especificado, crie uma cópia da tabela no google sheets, edite os parametros como quiser, baixe e importe.`}/>
-            </label>
-            
+            </label>            
           </div>
 
           <input
@@ -465,14 +488,19 @@ export default function DimensionForm({ onSubmit }: { onSubmit: (formData: any) 
                 <span>Baixar modelo de formulário</span>
               </Link>
             </div>
-          ) : <></>}  
-          
+          ) : <></>}            
         </div>
       </div>
 
-      <button type="submit" className={style.submit_button}>
-        Calcular Dimensionamento
+      <button type="submit" className={style.submit_button} disabled={loading}>
+        {loading ? 'Carregando...' : 'Submeter'}
       </button>
+
+      {errorMsg && (
+          <div className={style.error_message}>
+            <strong>Erro:</strong> {errorMsg}
+          </div>
+      )}
     </form>
   );
 }
