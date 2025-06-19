@@ -13,7 +13,7 @@ export type FormData = {
   ki: string,
   kv: string,
   area: string,
-  eficiencia: string,
+  perdas: string,
   fileName: string,
   importFile: boolean,
   useDefaultData: boolean,

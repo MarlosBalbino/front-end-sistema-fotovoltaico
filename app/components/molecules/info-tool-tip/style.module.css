@@ -29,4 +29,7 @@
   max-width: 400px; 
   width: 280px;
   /* word-wrap: break-word; */
+
+  font-size: 0.9rem;
+  color: #555;
 }

@@ -22,7 +22,7 @@ const inputLabels = {
   ki: "Coeficiente de temperatura de corrente (ki)",
   kv: "Coeficiente de temperatura de tensão (kv)",
   area: "Área do do painel (m²)",
-  eficiencia: "Eficiencia",
+  perdas: "Perdas (%)",
   tarifa_de_energia: "Tarifa de energia (R$)",
   tarifa_da_bandeira: "Tarifa da bandeira (R$)",
   custo_por_painel: "Custo por painel (R$)",
@@ -34,19 +34,6 @@ const inputLabels = {
   taxa_do_fio_b: "Taxa do fio B (R$)",
   inflacao_anual: "Inflação anual (%)"
 };
-
-const paybackPlaceHolders = {
-  tarifa_de_energia: "0.86293",
-    tarifa_da_bandeira: "0",
-    custo_por_painel: "1000",
-    custo_por_inversor: "5000",
-    custo_mao_de_obra: "5000",
-    inflacao_de_energia: "5.3",
-    anos_de_analise: "25",
-    depreciacao_anual: "0.5",
-    taxa_do_fio_b: "0.22",
-    inflacao_anual: "5"
-}
 
 interface DimensionFormProps {
   onSubmit: (formData: any) => Promise<string>,
@@ -67,7 +54,7 @@ export default function DimensionForm({ onSubmit }: DimensionFormProps) {
     ki: "",
     kv: "",
     area: "",
-    eficiencia: "",
+    perdas: "",
     fileName: "",
     importFile: false,
     useDefaultData: true,
@@ -91,7 +78,7 @@ export default function DimensionForm({ onSubmit }: DimensionFormProps) {
   const requiredFields: string[] = [
     'consumo', 'perfil', 'inclinacao', 'orientacao', 'isc', 'voc', 'imp', 'vmp', 'ns',
     'ki', 'kv', 'tarifa_de_energia', 'custo_por_painel', 'custo_por_inversor', 'custo_mao_de_obra',
-    'anos_de_analise'
+    'anos_de_analise', 'perdas'
   ];
 
   const [inputErrors, setInputErrors] = useState<Record<string, boolean>>({});
@@ -398,16 +385,16 @@ export default function DimensionForm({ onSubmit }: DimensionFormProps) {
             </div>       
 
             <div className={style.parameter_card}>
-              <label htmlFor="eficiencia">{inputLabels.eficiencia}</label>
+              <label htmlFor="perdas">{inputLabels.perdas}</label>
               <input
-                id="eficiencia"
-                className={`${style.input} ${inputErrors["eficiencia"] ? style.input_error : ''}`}
+                id="perdas"
+                className={`${style.input} ${inputErrors["perdas"] ? style.input_error : ''}`}
                 type="number"
-                name="eficiencia"
-                value={formData.eficiencia}
+                name="perdas"
+                value={formData.perdas}
                 onChange={handleChange}
                 step="0.00001"
-                placeholder="Ex: 0.216" 
+                placeholder="Ex: 20" 
               />
             </div>           
           </fieldset>

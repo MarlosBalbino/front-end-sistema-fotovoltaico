@@ -2,7 +2,7 @@ export function calcEnergiaGerada(
   Npainel: number,
   Pn: number,           // Potência nominal do painel (W)
   Hs: number,           // Horas de sol pleno por dia
-  perdas: number = 0.20, // 20% de perdas
+  perdas: number = 0.15, // 15% de perdas
   Fcorr = 1             // Fator de correção adicional
 ): number {
   // Potência do painel em kW

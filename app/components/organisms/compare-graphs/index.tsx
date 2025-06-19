@@ -37,6 +37,7 @@ export default function CompareGraphs( { data, data_label = "" }: { data: DataPo
       : [...selecionadas, k];
 
     setSelecionadas(nova);
+    // setDados(data)
 
     if (selecionada) {
       const dados_processados = processar(nova, selecionada.irradiancias);
@@ -61,7 +62,7 @@ export default function CompareGraphs( { data, data_label = "" }: { data: DataPo
                 const est = estacoes.find(est => est.nome === e.target.value);
                 setSelecionada(est || null);
                 setSelecionadas([]);
-                setDados([]);
+                setDados(data);
                 setLabels([])
               }}
             >
@@ -107,14 +108,13 @@ export default function CompareGraphs( { data, data_label = "" }: { data: DataPo
                 </tbody>
               </table>
             </div>
-
-            {/* Gráfico */}
-            {dados.length > 0 && (
-              <div className={style.chart_container}>
-                <IrradChart irradiancias={dados} yLabel="Irradiação" yUnit="kWh/m2.dia" labels={labels} />
-              </div>
-            )}
           </>
+        )}
+        {/* Gráfico */}
+        {dados.length > 0 && (
+          <div className={style.chart_container}>
+            <IrradChart irradiancias={dados} yLabel="Irradiação" yUnit="kWh/m2.dia" labels={labels} />
+          </div>
         )}
       </div>
     </div>

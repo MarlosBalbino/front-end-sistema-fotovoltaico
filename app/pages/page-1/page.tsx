@@ -21,6 +21,7 @@ import { ClimaticInput } from '@/app/types/climaticInput';
 
 import { InfoTooltip } from '@/app/components/molecules';
 import { Span } from 'next/dist/trace';
+import Link from 'next/link';
 
 const tarifa_consumo: Record<string, { tarifa: number, fases: number }> = {
   monofasico: { tarifa: 30, fases: 1 },
@@ -43,7 +44,7 @@ export default function Page2() {
     ki: "",
     kv: "",
     area: "",
-    eficiencia: "",
+    perdas: "",
     fileName: "",
     importFile: false,
     useDefaultData: true,
@@ -124,7 +125,8 @@ export default function Page2() {
   function calcularGeracaoMensal(
     medias: DataPoint[],
     potenciaPaineis: number,
-    nPaineis: number
+    nPaineis: number,
+    perdas: number
   ): { geracaoMensal: DataPoint[]; energiaAcumulada: number } {
     let energiaAcumulada = 0;
 
@@ -135,7 +137,7 @@ export default function Page2() {
         if (chave !== 'mes') {
           const valor = item[chave];
           if (typeof valor === 'number') {
-            const energia_mes = calcEnergiaGerada(nPaineis, potenciaPaineis, valor);
+            const energia_mes = calcEnergiaGerada(nPaineis, potenciaPaineis, valor, perdas);
             novoItem[chave] = energia_mes;
             energiaAcumulada += energia_mes;
           }
@@ -184,16 +186,17 @@ export default function Page2() {
       if (res.ok) {
 
         setPanelParamsResult(data);
-
+        const perdas = parseFloat(formData.perdas)/100
         const nPaineis = calcPanelSizing(
           parseFloat(formData.consumo), 
           tarifa_consumo[formData.perfil].tarifa, 
           data.P_mpp, 
           horaSol,
+          perdas
         )
 
         setNPaneis(nPaineis)     
-        const {geracaoMensal, energiaAcumulada } = calcularGeracaoMensal(medias, data.P_mpp, nPaineis)   
+        const {geracaoMensal, energiaAcumulada } = calcularGeracaoMensal(medias, data.P_mpp, nPaineis, perdas)   
         setGeracaoMensal(geracaoMensal)
         setEnergiaAcumulada(energiaAcumulada)
 
@@ -372,7 +375,7 @@ export default function Page2() {
         <section className={style.intro}>
           <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: "1rem", marginTop: '1rem'}}>
             <h1 className={style.title}>Simulação do Sistema Fotovoltaico</h1>
-            <InfoTooltip text={"Os dados de irradiância e temperatura utilizados nesta simulação são provenientes de uma base de dados fixa, correspondente à usina solar fotovoltaica localizada no Campus A.C. Simões da UFAL."} />
+            <InfoTooltip iconSize={15} text={"Os dados de irradiância e temperatura utilizados nesta simulação são provenientes de uma base de dados fixa, correspondente à usina solar fotovoltaica localizada no Campus A.C. Simões da UFAL."} />
           </div>
           
           <sub className={style.sub}>Localização fixa:</sub> 
@@ -384,10 +387,19 @@ export default function Page2() {
           <label className={style.result_label_level1}>Ano: 2020 </label> 
         </div>      
         </section>
-      </div>     
+      </div>   
 
       {/* =========================================================================================================== */
-      /* =================================== FORMULÁRIO ======================================================= */}      
+      /* =================================== MANUAL ======================================================= */} 
+      <div className={style.section}>
+        {/* <h2 className={style.section_title}>Formulário de dimensionamento e Payback</h2> */}
+        <p className={style.instructions}>Caso não esteja familiarizado com as funcionalidades desta plataforma acesse as instruções de uso no link abaixo:</p>
+        
+        <Link className={style.download} target="_blank" rel="noopener noreferrer" href={'https://drive.google.com/file/d/1Vg8ECzCGeAZMMFnbfPnJcBjdsDjLHSRI/view?usp=sharing'}>manual do usuário</Link>
+      </div>   
+
+      {/* =========================================================================================================== */
+      /* =================================== FORMULÁRIO ======================================================= */}          
       <div className={style.section}>
         <h2 className={style.section_title}>Formulário de dimensionamento e Payback</h2>
         <DimensionForm onSubmit={handleSubmit} />
@@ -465,7 +477,7 @@ export default function Page2() {
                 <label className={style.result_label_level1}>Consumo mínimo ({`${formData.perfil}`}): {tarifa_consumo[formData.perfil].tarifa} kWh</label>
                 <label className={style.result_label_level1}>Potência nominal: {panelParamsResult?.P_mpp.toFixed(2)} W</label>
                 <label className={style.result_label_level1}>Hora sol: {horaSol.toFixed(2)} kWh/m2.dia</label>
-                <label className={style.result_label_level1}>Perdas: 20%</label>
+                <label className={style.result_label_level1}>Perdas: {formData.perdas}%</label>
                 <label className={style.result_label_level1}>Fator de correção: 1</label>
               </div>
 
@@ -480,7 +492,8 @@ export default function Page2() {
               <hr className={style.subsection_divider} />
 
               <div style={{display: "flex", flexDirection: "column", marginTop: '1rem'}}>
-                <h3 className={style.subsection_title}>Geração de energia mensal:</h3>
+                <h3 className={style.subsection_title}>Geração de energia mensal {<InfoTooltip iconSize={15} text={
+                  "Note que o valor gerado mensalmente já desconta a energia cobrada pela concessionária (Ex: 100kWh se for trifásico), pois essa energia já está sendo paga."}/>}:</h3>
                 <IrradChart irradiancias={geracaoMensal} yLabel="Energia" yUnit='kWh' labels={["Geração mensal"]} />  
 
                 <h3 className={style.subsection_title}>Energia Anual:</h3>     

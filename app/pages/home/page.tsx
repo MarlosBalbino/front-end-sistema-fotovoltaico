@@ -29,7 +29,7 @@ export default function HomePage() {
           <h1 className={style.title}>ECOM117</h1>
           <sub className={style.sub}>Tópicos em Energia Solar Fotovoltaica</sub> 
         </section>
-      </div>     
+      </div>
 
       {/* Seção de Conteúdo 1 */}
       <PvSizingInfo/>

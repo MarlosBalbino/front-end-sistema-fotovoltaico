@@ -300,3 +300,12 @@
   border-left: 4px solid #d32f2f;
   font-size: 0.9rem;
 }
+
+.download {
+  color: #1976d2;
+}
+
+.instructions, .download {
+  font-size: 0.9rem;
+  font-weight: 500;
+}

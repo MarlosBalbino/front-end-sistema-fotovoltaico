@@ -1,3 +1,5 @@
+'use client'
+
 import style from './style.module.css'
 import { LinkItem } from '@atoms'
 
@@ -9,11 +11,6 @@ interface InterfacePerfil {
 
 const Perfil: React.FC<InterfacePerfil> = ({ name, descr = []}) => {
 
-  // const async function fodase (params:type) {
-  //   const response = await fetch(`/${fileName}`);
-  // }
-
-  
 
   return (
     <div className={style.main_container}>
@@ -22,7 +19,7 @@ const Perfil: React.FC<InterfacePerfil> = ({ name, descr = []}) => {
         <LinkItem link='' label={name}/>
         {descr.length > 0 && (
           <ul className={style.ul}>
-            {descr.map(item => (<li>{item}</li>))}
+            {descr.map((item, idx) => (<li key={idx}> {item}</li>))}
           </ul>)}
       </div>      
       <div className={style.perfil}><img className={style.img} src="/perfil_sem_fundo.png" alt="foto de perfil" /></div>
